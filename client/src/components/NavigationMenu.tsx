@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alignment, Button, InputGroup, Navbar } from '@blueprintjs/core';
+import { Alignment, Button, Navbar } from '@blueprintjs/core';
 
 class NavigationMenu extends React.Component {
    render() {
@@ -7,7 +7,7 @@ class NavigationMenu extends React.Component {
       <div>
          <Navbar>
             <Navbar.Group align={Alignment.LEFT}>
-               <Navbar.Heading>My Website</Navbar.Heading>
+               <Button className="Logo-btn bp5-large" />
             </Navbar.Group>
             <Navbar.Group align={Alignment.RIGHT}>
                <Button className="bp5-minimal" icon="user" text="Sign In" />
