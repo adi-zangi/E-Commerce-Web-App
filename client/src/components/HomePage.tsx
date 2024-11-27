@@ -1,17 +1,21 @@
-import React from 'react';
+import { FC } from 'react';
 import logo from '../logos/logo.svg';
 import '../styles/App.css';
+import { AppState } from '../utills/DataTypes';
 
-class HomePage extends React.Component {
-   render() {
-      return (
+interface Props {
+   state: AppState;
+   setState: (newState : AppState) => void;
+}
+
+const HomePage: FC<Props> = (props: Props) => {
+   return (
       <div>
          <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
          </header>
       </div>
-      );
-   }
+   );
 }
 
  export default HomePage;

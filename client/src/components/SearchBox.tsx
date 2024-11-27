@@ -1,15 +1,24 @@
+import { FC } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
-import React from 'react';
+import { AppState } from '../utills/DataTypes';
 
-class SearchBox extends React.Component {
-   render() {
-      return (
+interface Props {
+   state: AppState;
+   setState: (newState : AppState) => void;
+}
+
+const SearchBox: FC<Props> = (props: Props) => {
+   return (
       <div className="Search-section">
-         <InputGroup className="Navbar-search Search-box" type="search" large placeholder="Search Products" />
-         <Button className="bp5-minimal Search-btn" icon="search" />
+         <InputGroup
+            className="Navbar-search Search-box"
+            type="search"
+            large placeholder="Search Products" />
+         <Button
+            className="bp5-minimal Search-btn"
+            icon="search" />
       </div>
-      );
-   }
+   );
 }
 
  export default SearchBox;

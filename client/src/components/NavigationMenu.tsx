@@ -1,13 +1,23 @@
-import React from 'react';
+import { FC } from 'react';
 import { Alignment, Button, Navbar } from '@blueprintjs/core';
+import { AppState, Page } from '../utills/DataTypes';
 
-class NavigationMenu extends React.Component {
-   render() {
-      return (
+interface Props {
+   state: AppState;
+   setState: (newState : AppState) => void;
+}
+
+const NavigationMenu: FC<Props> = (props: Props) => {
+
+   const handleLogoClick = () => {
+      window.location.reload();
+   }
+
+   return (
       <div>
          <Navbar>
             <Navbar.Group align={Alignment.LEFT}>
-               <Button className="Logo-btn bp5-large" />
+               <Button className="Logo-btn bp5-large" onClick={handleLogoClick} />
             </Navbar.Group>
             <Navbar.Group align={Alignment.RIGHT}>
                <Button className="bp5-minimal" icon="user" text="Sign In" />
@@ -15,8 +25,7 @@ class NavigationMenu extends React.Component {
             </Navbar.Group>
          </Navbar>
       </div>
-      );
-   }
+   );
 }
 
  export default NavigationMenu;
