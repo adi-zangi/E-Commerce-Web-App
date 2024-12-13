@@ -5,4 +5,5 @@ export enum Page {
 
 export interface AppState {
    page: Page;
+   searchQuery: string;
 }

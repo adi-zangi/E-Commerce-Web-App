@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
-import { AppState } from '../utills/DataTypes';
+import { useRef } from 'react';
+import { AppState, Page } from '../utills/DataTypes';
 
 interface Props {
    state: AppState;
@@ -8,15 +9,28 @@ interface Props {
 }
 
 const SearchBox: FC<Props> = (props: Props) => {
+
+   const searchBox = useRef<HTMLInputElement>(null);
+
+   const handleSearchClick = () => {
+      const query = searchBox.current?.value;
+      if (query != undefined) {
+         props.setState({page: Page.SearchResults, searchQuery: query});
+      }
+   }
+
    return (
-      <div className="Search-section">
+      <div className="Search-bar">
          <InputGroup
-            className="Navbar-search Search-box"
+            large
+            className="Navbar-search Search-input"
             type="search"
-            large placeholder="Search Products" />
+            placeholder="Search Products"
+            inputRef={searchBox} />
          <Button
-            className="bp5-minimal Search-btn"
-            icon="search" />
+            className="bp5-minimal"
+            icon="search"
+            onClick={handleSearchClick} />
       </div>
    );
 }

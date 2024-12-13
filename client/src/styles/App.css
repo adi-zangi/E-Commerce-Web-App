@@ -24,18 +24,36 @@
    background-repeat: no-repeat;
    box-shadow: none !important;
    background-color: white !important;
- }
+}
 
-.Search-section {
+.Search-bar {
+   height: 100%;
    display: flex;
-   padding-top: 5vh;
+   justify-content: center;
+   align-items: center;
+   margin-left: 15%;
 }
 
-.Search-box {
+.Search-input {
    width: 40vw;
-   margin-left: auto;
 }
 
-.Search-btn {
-   margin:auto auto auto 0;
+.Items-container {
+   margin: 4vh auto;
+}
+
+.Item-card {
+   border-style: solid;
+   border-color: lightgrey;
+   border-radius: 10px;
+}
+
+.Item-link {
+   color: black;
+   text-decoration: none !important;
+}
+
+.Item-link:hover {
+   color: black;
+   text-decoration: none !important;
 }
