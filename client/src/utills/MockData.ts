@@ -1,9 +1,5 @@
 import logo from '../logos/logo.svg';
-
-interface Item {
-   name: string
-   image: string
-}
+import { Product } from './DataTypes';
 
 export const data = [
    {name: "Item 1", image: logo},
@@ -20,7 +16,24 @@ export const data = [
    {name: "Item 12", image: logo},
 ]
 
-export const getPage = (pageNumber: number, itemsPerPage: number) : Array<Item>=> {
+/**
+ * Returns the number of search results pages available for the given search query
+ * @param query The search query
+ * @param itemsPerPage The number of items per page
+ */
+export const getNumberOfPages = (query: string, itemsPerPage: number): number => {
+   return Math.ceil(data.length / itemsPerPage);
+}
+
+/**
+ * Returns an array of search results for the given search query and page
+ * @param query The search query
+ * @param pageNumber The page number
+ * @param itemsPerPage The number of items per page
+ * @returns 
+ */
+export const getDataForPage = (query: string, pageNumber: number, itemsPerPage: number)
+      : Array<Product> => {
    const startIndex = (pageNumber - 1) * itemsPerPage;
    let endIndex = startIndex + itemsPerPage;
    endIndex = endIndex < data.length ? endIndex : data.length;

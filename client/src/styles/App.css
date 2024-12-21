@@ -39,7 +39,7 @@
 }
 
 .Items-container {
-   margin: 4vh auto;
+   margin: 4vh auto 0;
 }
 
 .Item-card {
@@ -56,4 +56,26 @@
 .Item-link:hover {
    color: black;
    text-decoration: none !important;
+}
+
+.Page-picker {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: fit-content;
+   margin: 2vh auto 0;
+}
+
+.Page-input {
+   margin-left: 10px;
+   margin-right: 10px;
+   width: 2.5em !important;
+}
+
+.Page-up-btn {
+   margin-left: 10px;
+}
+
+.Page-down-btn {
+   margin-right: 10px;
 }
