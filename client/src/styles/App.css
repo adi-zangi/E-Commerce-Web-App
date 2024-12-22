@@ -38,8 +38,17 @@
    width: 40vw;
 }
 
-.Items-container {
-   margin: 4vh auto 0;
+.Results-container {
+   margin: 0 auto 0;
+}
+
+.Results-header {
+   padding: 2vh 0;
+   text-align: left;
+}
+
+.No-results-header {
+   padding: 2vh 0;
 }
 
 .Item-card {

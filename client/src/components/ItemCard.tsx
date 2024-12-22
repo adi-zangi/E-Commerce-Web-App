@@ -6,13 +6,13 @@ interface Props {
 }
 
 export const imageStyle = {
-   width: 210,
-   height: 210,
+   width: 200,
+   height: 200,
 }
 
 export const cardStyle = {
    width: imageStyle.width,
-   height: 245,
+   height: 235,
    borderThickness: 1,
 }
 

@@ -1,14 +1,20 @@
 import { FC, useEffect, useState } from 'react';
-import { Product } from '../utills/DataTypes';
+import { AppState, Product } from '../utills/DataTypes';
 import ItemCard, { cardStyle } from './ItemCard';
 
 interface Props {
+   state: AppState;
+   setState: (newState : AppState) => void;
+   products: Array<Product>;
+   numberOfResults: number;
+}
+
+interface GridProps {
    products: Array<Product>;
 }
 
 interface State {
    windowWidth: number;
-   windowHeight: number;
 }
 
 const styles = {
@@ -22,16 +28,11 @@ const styles = {
  * @param windowWidth The current window's width
  * @param windowHeight The current window's height
  */
-const setGridDimensions = (windowWidth: number, windowHeight: number) => {
+const setGridDimensions = (windowWidth: number) => {
    const cellWidth = cardStyle.width + (2 * cardStyle.borderThickness);
-   const cellHeight = cardStyle.height + (2 * cardStyle.borderThickness);
    const cellGap = 6;
-
-   const itemsPerRow = Math.floor(windowWidth / (cellWidth + cellGap));
-   const itemsPerCol = Math.floor(windowHeight / (cellHeight + cellGap));
-
+   const itemsPerRow = Math.floor((windowWidth * 0.9) / (cellWidth + cellGap));
    const containerWidth = itemsPerRow * (cellWidth + cellGap) - cellGap;
-   const containerHeight = itemsPerCol * (cellHeight + cellGap) - cellGap;
 
    styles.containerStyle = {
       width: containerWidth
@@ -46,7 +47,7 @@ const setGridDimensions = (windowWidth: number, windowHeight: number) => {
    }
 }
 
-const SearchResultsGrid: FC<Props> = (props: Props) => {
+const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
    const gridCells = props.products.map((item) =>
       <ItemCard key={item.name} name={item.name} image={item.image}/>
    );
@@ -61,14 +62,12 @@ const SearchResultsGrid: FC<Props> = (props: Props) => {
 const SearchResultsGridView: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>({ 
       windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
    });
 
    useEffect(() => {
       const handleResize = () => {
          setState({
             windowWidth: window.innerWidth,
-            windowHeight: window.innerHeight
          })
       };
 
@@ -77,12 +76,15 @@ const SearchResultsGridView: FC<Props> = (props: Props) => {
       return () => {
          window.removeEventListener('resize', handleResize);
       }
-   })
+   }, [props.state.page])
 
-   setGridDimensions(state.windowWidth, state.windowHeight);
+   setGridDimensions(state.windowWidth);
 
    return (
-      <div className="Items-container" style={styles.containerStyle}>
+      <div className="Results-container" style={styles.containerStyle}>
+         <div className="Results-header">
+            Found {props.numberOfResults} products
+         </div>
          <SearchResultsGrid products={props.products} />
       </div>
    );

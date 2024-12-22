@@ -2,40 +2,31 @@ import logo from '../logos/logo.svg';
 import { Product } from './DataTypes';
 
 export const data = [
-   {name: "Item 1", image: logo},
-   {name: "Item 2", image: logo},
-   {name: "Item 3", image: logo},
-   {name: "Item 4", image: logo},
-   {name: "Item 5", image: logo},
-   {name: "Item 6", image: logo},
-   {name: "Item 7", image: logo},
-   {name: "Item 8", image: logo},
-   {name: "Item 9", image: logo},
-   {name: "Item 10", image: logo},
-   {name: "Item 11", image: logo},
-   {name: "Item 12", image: logo},
+   {name: "Pencil 1", image: logo},
+   {name: "Pencil 2", image: logo},
+   {name: "Pencil 3", image: logo},
+   {name: "Pencil 4", image: logo},
+   {name: "Pencil 5", image: logo},
+   {name: "Pencil 6", image: logo},
+   {name: "Pen 7", image: logo},
+   {name: "Pen 8", image: logo},
+   {name: "Pen 9", image: logo},
+   {name: "Pen 10", image: logo},
+   {name: "Pen 11", image: logo},
+   {name: "Pen 12", image: logo},
 ]
 
 /**
- * Returns the number of search results pages available for the given search query
+ * Returns an array of products that match the given query
+ * An empty search returns all the products in the store
  * @param query The search query
- * @param itemsPerPage The number of items per page
+ * @returns An array of products
  */
-export const getNumberOfPages = (query: string, itemsPerPage: number): number => {
-   return Math.ceil(data.length / itemsPerPage);
-}
-
-/**
- * Returns an array of search results for the given search query and page
- * @param query The search query
- * @param pageNumber The page number
- * @param itemsPerPage The number of items per page
- * @returns 
- */
-export const getDataForPage = (query: string, pageNumber: number, itemsPerPage: number)
-      : Array<Product> => {
-   const startIndex = (pageNumber - 1) * itemsPerPage;
-   let endIndex = startIndex + itemsPerPage;
-   endIndex = endIndex < data.length ? endIndex : data.length;
-   return data.slice(startIndex, endIndex);
+export const getSearchResults = (query: string): Array<Product> => {
+   if (!query) {
+      return data;
+   }
+   return data.filter((product) =>
+      product.name.toLowerCase().includes(query.toLowerCase())
+   );
 }
