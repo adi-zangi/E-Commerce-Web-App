@@ -2,18 +2,18 @@ import logo from '../logos/logo.svg';
 import { Product } from './DataTypes';
 
 export const data = [
-   {name: "Pencil 1", image: logo},
-   {name: "Pencil 2", image: logo},
-   {name: "Pencil 3", image: logo},
-   {name: "Pencil 4", image: logo},
-   {name: "Pencil 5", image: logo},
-   {name: "Pencil 6", image: logo},
-   {name: "Pen 7", image: logo},
-   {name: "Pen 8", image: logo},
-   {name: "Pen 9", image: logo},
-   {name: "Pen 10", image: logo},
-   {name: "Pen 11", image: logo},
-   {name: "Pen 12", image: logo},
+   {name: "Pencil 1", price: 1.00, image: logo},
+   {name: "Pencil 2", price: 1.00, image: logo},
+   {name: "Pencil 3", price: 1.00, image: logo},
+   {name: "Pencil 4", price: 1.00,image: logo},
+   {name: "Pencil 5", price: 1.00,image: logo},
+   {name: "Pencil 6", price: 1.00, image: logo},
+   {name: "Pen 7", price: 1.00, image: logo},
+   {name: "Pen 8", price: 1.00, image: logo},
+   {name: "Pen 9", price: 1.00, image: logo},
+   {name: "Pen 10", price: 1.00, image: logo},
+   {name: "Pen 11", price: 1.00, image: logo},
+   {name: "Pen 12", price: 1.00, image: logo},
 ]
 
 /**

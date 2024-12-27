@@ -49,7 +49,11 @@ const setGridDimensions = (windowWidth: number) => {
 
 const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
    const gridCells = props.products.map((item) =>
-      <ItemCard key={item.name} name={item.name} image={item.image}/>
+      <ItemCard
+         key={item.name}
+         name={item.name}
+         price={item.price}
+         image={item.image} />
    );
    
    return (

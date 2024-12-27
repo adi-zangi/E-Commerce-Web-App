@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+   text-align: center;
 }
 
 .App-logo {
@@ -55,6 +55,20 @@
    border-style: solid;
    border-color: lightgrey;
    border-radius: 10px;
+}
+
+.Item-desc {
+   display: flex;
+}
+
+.Item-name {
+   padding-left: 5px;
+   width: 80%;  
+   text-align: left; 
+}
+
+.Item-price {
+   width: 20%;
 }
 
 .Item-link {
