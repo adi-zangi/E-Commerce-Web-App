@@ -47,6 +47,13 @@
    text-align: left;
 }
 
+.Spinner-container {
+   display: flex;
+   height: 90vh;
+   align-items: center;
+   justify-content: center;
+}
+
 .No-results-header {
    padding: 2vh 0;
 }
@@ -62,9 +69,9 @@
 }
 
 .Item-name {
-   padding-left: 5px;
+   padding-left: 6px;
    width: 80%;  
-   text-align: left; 
+   text-align: left;
 }
 
 .Item-price {

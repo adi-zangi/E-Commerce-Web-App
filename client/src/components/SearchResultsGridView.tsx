@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { AppState, Product } from '../utills/DataTypes';
+import { AppState, Product } from '../utils/dataTypes';
 import ItemCard, { cardStyle } from './ItemCard';
 
 interface Props {
@@ -50,10 +50,10 @@ const setGridDimensions = (windowWidth: number) => {
 const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
    const gridCells = props.products.map((item) =>
       <ItemCard
-         key={item.name}
-         name={item.name}
+         key={item.product_id}
+         name={item.product_name}
          price={item.price}
-         image={item.image} />
+         image={item.image_link} />
    );
    
    return (

@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { AppState, Product } from "../utills/DataTypes";
+import { AppState, Product } from "../utils/dataTypes";
 import SearchResultsGridView from "./SearchResultsGridView";
-import { getSearchResults } from "../utills/MockData";
-import { Button, NumericInput } from "@blueprintjs/core";
+import { Button, NumericInput, Spinner } from "@blueprintjs/core";
+import { searchForProducts } from "../utils/dataService";
 
 interface Props {
    state: AppState;
@@ -15,12 +15,13 @@ interface PagePickerProps {
    setPage: (page : number) => void;
 }
 
-type State = {
-   results: Array<Product>,
-   selectedPage: number,
-   pageData: Array<Product>,
-   itemsPerPage: number,
-   numberOfPages: number,
+interface State {
+   loading: boolean;
+   results: Array<Product>;
+   selectedPage: number;
+   pageData: Array<Product>;
+   itemsPerPage: number;
+   numberOfPages: number;
 }
 
 /**
@@ -117,6 +118,7 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
 
 const SearchResults: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>({
+      loading: true,
       results: [],
       selectedPage: 0,
       pageData: [],
@@ -125,14 +127,26 @@ const SearchResults: FC<Props> = (props: Props) => {
    });
 
    useEffect(() => {
-      const results = getSearchResults(props.state.searchQuery);
-      setState({
-         results: results,
-         selectedPage: 1,
-         pageData: getResultsForPage(results, 1, 10),
-         itemsPerPage: 10,
-         numberOfPages: getNumberOfPages(results.length, 10),
-      })
+      const initializeData = async () => {
+         let results = new Array<Product>();
+         await searchForProducts(props.state.searchQuery)
+            .then(response => {
+               results = response.data;
+            })
+            .catch((e: Error) => {
+               console.error(e);
+            });
+         const itemsPerPage = 6;
+         setState({
+            loading: false,
+            results: results,
+            selectedPage: 1,
+            pageData: getResultsForPage(results, 1, itemsPerPage),
+            itemsPerPage: itemsPerPage,
+            numberOfPages: getNumberOfPages(results.length, itemsPerPage),
+         })
+      }
+      initializeData();
    }, [props]);
 
    const setPage = (page: number) => {
@@ -143,11 +157,20 @@ const SearchResults: FC<Props> = (props: Props) => {
       })
    }
 
-   return (
-      state.results.length === 0 ? 
+   if (state.loading) {
+      return (
+         <div className="Spinner-container">
+            <Spinner intent="primary" />
+         </div>
+      );
+   } else if (state.results.length === 0) {
+      return (
          <div className="No-results-header">
             No matches found
-         </div> :
+         </div> 
+      );
+   } else {
+      return (
          <div>
             <SearchResultsGridView
                state={props.state}
@@ -159,7 +182,8 @@ const SearchResults: FC<Props> = (props: Props) => {
                selectedPage={state.selectedPage} 
                setPage={setPage} />
          </div>
-   );
+      );
+   }
 }
 
 export default SearchResults;

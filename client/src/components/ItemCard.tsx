@@ -1,5 +1,10 @@
 import { FC } from 'react';
-import { Product } from '../utills/DataTypes';
+
+interface Props {
+   name: string;
+   price: string;
+   image: string;
+}
 
 export const imageStyle = {
    width: 190,
@@ -7,19 +12,19 @@ export const imageStyle = {
 }
 
 export const cardStyle = {
-   width: imageStyle.width + 20,
+   width: 370,
    height: 235,
    borderThickness: 1,
 }
 
-const ItemCard: FC<Product> = (props: Product) => {
+const ItemCard: FC<Props> = (props: Props) => {
    return (
       <div className="Item-card" style={cardStyle}>
          <a className="Item-link">
-            <img src={props.image} style={imageStyle} alt="logo" />
+            <img src={props.image} style={imageStyle} alt="image" />
             <div className="Item-desc">
                <div className="Item-name">{props.name}</div>
-               <div className="Item-price">{"$" + props.price.toFixed(2)}</div>
+               <div className="Item-price">{"$" + props.price}</div>
             </div>
          </a>
       </div>

@@ -9,7 +9,10 @@ export interface AppState {
 }
 
 export interface Product {
-   name: string
-   price: number
-   image: string
+   product_id: number;
+   department_id: number;
+   category_id: number;
+   product_name: string;
+   price: string;
+   image_link: string;
 }
