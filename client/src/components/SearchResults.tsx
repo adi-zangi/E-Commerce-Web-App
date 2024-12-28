@@ -126,12 +126,13 @@ const SearchResults: FC<Props> = (props: Props) => {
 
    useEffect(() => {
       const results = getSearchResults(props.state.searchQuery);
+      const itemsPerPage = 6;
       setState({
          results: results,
          selectedPage: 1,
-         pageData: getResultsForPage(results, 1, 10),
-         itemsPerPage: 10,
-         numberOfPages: getNumberOfPages(results.length, 10),
+         pageData: getResultsForPage(results, 1, itemsPerPage),
+         itemsPerPage: itemsPerPage,
+         numberOfPages: getNumberOfPages(results.length, itemsPerPage),
       })
    }, [props]);
 

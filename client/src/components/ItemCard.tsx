@@ -7,7 +7,7 @@ export const imageStyle = {
 }
 
 export const cardStyle = {
-   width: imageStyle.width + 20,
+   width: 370,
    height: 235,
    borderThickness: 1,
 }
