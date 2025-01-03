@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
 import { useRef } from 'react';
-import { AppState, Page } from '../utills/DataTypes';
+import { AppState, Page } from '../utils/dataTypes';
 
 interface Props {
    state: AppState;

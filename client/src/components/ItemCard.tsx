@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Product } from '../utills/DataTypes';
+import { Product } from '../utils/dataTypes';
 
 export const imageStyle = {
    width: 190,

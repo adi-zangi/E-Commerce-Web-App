@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Alignment, Button, Navbar } from '@blueprintjs/core';
-import { AppState } from '../utills/DataTypes';
+import { AppState } from '../utils/dataTypes';
 import SearchBox from './SearchBox';
 
 interface Props {

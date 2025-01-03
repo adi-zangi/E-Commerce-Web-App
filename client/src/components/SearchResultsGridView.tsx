@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { AppState, Product } from '../utills/DataTypes';
+import { AppState, Product } from '../utils/dataTypes';
 import ItemCard, { cardStyle } from './ItemCard';
 
 interface Props {

@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { AppState, Product } from "../utills/DataTypes";
+import { AppState, Product } from "../utils/dataTypes";
 import SearchResultsGridView from "./SearchResultsGridView";
-import { getSearchResults } from "../utills/MockData";
 import { Button, NumericInput } from "@blueprintjs/core";
+import { getAllProducts, searchForProducts } from "../utils/dataClient";
 
 interface Props {
    state: AppState;
@@ -125,15 +125,25 @@ const SearchResults: FC<Props> = (props: Props) => {
    });
 
    useEffect(() => {
-      const results = getSearchResults(props.state.searchQuery);
-      const itemsPerPage = 6;
-      setState({
-         results: results,
-         selectedPage: 1,
-         pageData: getResultsForPage(results, 1, itemsPerPage),
-         itemsPerPage: itemsPerPage,
-         numberOfPages: getNumberOfPages(results.length, itemsPerPage),
-      })
+      const initializeData = async () => {
+         let results = new Array<Product>();
+         await searchForProducts(props.state.searchQuery)
+            .then(response => {
+               results = response.data;
+            })
+            .catch((e: Error) => {
+               console.log(e.message);
+            });
+         const itemsPerPage = 6;
+         setState({
+            results: results,
+            selectedPage: 1,
+            pageData: getResultsForPage(results, 1, itemsPerPage),
+            itemsPerPage: itemsPerPage,
+            numberOfPages: getNumberOfPages(results.length, itemsPerPage),
+         })
+      }
+      initializeData();
    }, [props]);
 
    const setPage = (page: number) => {
@@ -164,3 +174,7 @@ const SearchResults: FC<Props> = (props: Props) => {
 }
 
 export default SearchResults;
+
+function getProductsByKeyword(searchQuery: string) {
+   throw new Error("Function not implemented.");
+}

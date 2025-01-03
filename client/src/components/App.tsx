@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import '../styles/App.css';
 import HomePage from './HomePage';
 import NavigationMenu from './NavigationMenu';
-import { AppState, Page } from '../utills/DataTypes';
+import { AppState, Page } from '../utils/dataTypes';
 import SearchResults from './SearchResults';
 
 const App: FC = () => {
