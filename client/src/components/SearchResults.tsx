@@ -1,8 +1,14 @@
+/**
+ * A container that displays search results and allows to navigate between
+ * pages of search results
+ */
+
 import { FC, useEffect, useRef, useState } from "react";
 import { AppState, Product } from "../utils/dataTypes";
 import SearchResultsGridView from "./SearchResultsGridView";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
-import { searchForProducts } from "../utils/dataService";
+import { getProductsByCategory, searchForProducts } from "../utils/dataService";
+import { AxiosResponse } from "axios";
 
 interface Props {
    state: AppState;
@@ -24,13 +30,33 @@ interface State {
    numberOfPages: number;
 }
 
+export const styleVars = {
+   widthFactor: 0.9
+}
+
+const containerStyle = {
+   width: styleVars.widthFactor * 100 + 'vw'
+}
+
+/**
+ * Gets the search results from the database based on the current query or
+ * selected shop category
+ * @param state The app state
+ */
+const getSearchResults = (state: AppState) : Promise<AxiosResponse<any, any>> => {
+   if (state.selectedCategory) {
+      return getProductsByCategory(state.selectedCategory.category_id);
+   }
+   return searchForProducts(state.searchQuery);
+}
+
 /**
  * Returns the number of pages of search results available for the total results
  * @param numberOfResults The number of results
  * @param itemsPerPage The number of items per page
  * @returns The number of pages of search results available
  */
-export const getNumberOfPages = (numberOfResults: number, itemsPerPage: number): number => {
+const getNumberOfPages = (numberOfResults: number, itemsPerPage: number): number => {
    return Math.ceil(numberOfResults / itemsPerPage);
 }
 
@@ -41,7 +67,7 @@ export const getNumberOfPages = (numberOfResults: number, itemsPerPage: number):
  * @param itemsPerPage The number of items per page
  * @returns An array of search results to display for the given page number
  */
-export const getResultsForPage = (results: Array<Product>, pageNumber: number, itemsPerPage: number)
+const getResultsForPage = (results: Array<Product>, pageNumber: number, itemsPerPage: number)
       : Array<Product> => {
    const startIndex = (pageNumber - 1) * itemsPerPage;
    let endIndex = startIndex + itemsPerPage;
@@ -129,9 +155,9 @@ const SearchResults: FC<Props> = (props: Props) => {
    useEffect(() => {
       const initializeData = async () => {
          let results = new Array<Product>();
-         await searchForProducts(props.state.searchQuery)
-            .then(response => {
-               results = response.data;
+         await getSearchResults(props.state)
+            .then((res: any) => {
+               results = res.data;
             })
             .catch((e: Error) => {
                console.error(e);
@@ -157,33 +183,33 @@ const SearchResults: FC<Props> = (props: Props) => {
       })
    }
 
-   if (state.loading) {
-      return (
-         <div className="Spinner-container">
-            <Spinner intent="primary" />
-         </div>
-      );
-   } else if (state.results.length === 0) {
-      return (
-         <div className="No-results-header">
-            No matches found
-         </div> 
-      );
-   } else {
-      return (
-         <div>
-            <SearchResultsGridView
-               state={props.state}
-               setState={props.setState}
-               products={state.pageData}
-               numberOfResults={state.results.length} />
-            <PagePicker
-               numberOfPages={state.numberOfPages}
-               selectedPage={state.selectedPage} 
-               setPage={setPage} />
-         </div>
-      );
-   }
+   return (
+      <div className="Results-container" style={containerStyle}>
+         { state.loading && 
+               <div className="Spinner-container">
+                  <Spinner intent="primary" />
+               </div>
+         }
+         { !state.loading && (state.results.length === 0) &&
+               <div className="No-results-header">
+                  No matches found
+               </div>
+         }
+         { !state.loading && (state.results.length > 0) && 
+               <SearchResultsGridView
+                  state={props.state}
+                  setState={props.setState}
+                  products={state.pageData}
+                  numberOfResults={state.results.length} />
+         }
+         { !state.loading && (state.results.length > 0) && 
+               <PagePicker
+                  numberOfPages={state.numberOfPages}
+                  selectedPage={state.selectedPage} 
+                  setPage={setPage} />
+         }
+      </div>
+   );
 }
 
 export default SearchResults;

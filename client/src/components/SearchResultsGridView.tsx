@@ -1,6 +1,12 @@
+/**
+ * A container that displays a list of products as a grid that adjusts to
+ * the window size
+ */
+
 import { FC, useEffect, useState } from 'react';
 import { AppState, Product } from '../utils/dataTypes';
-import ItemCard, { cardStyle } from './ItemCard';
+import GridItem, { gridItemStyle } from './GridItem';
+import { styleVars } from './SearchResults';
 
 interface Props {
    state: AppState;
@@ -29,9 +35,10 @@ const styles = {
  * @param windowHeight The current window's height
  */
 const setGridDimensions = (windowWidth: number) => {
-   const cellWidth = cardStyle.width + (2 * cardStyle.borderThickness);
+   const cellWidth = gridItemStyle.width + (2 * gridItemStyle.borderThickness);
    const cellGap = 6;
-   const itemsPerRow = Math.floor((windowWidth * 0.9) / (cellWidth + cellGap));
+   const widthFactor = styleVars.widthFactor;
+   const itemsPerRow = Math.floor((windowWidth * widthFactor) / (cellWidth + cellGap));
    const containerWidth = itemsPerRow * (cellWidth + cellGap) - cellGap;
 
    styles.containerStyle = {
@@ -48,8 +55,8 @@ const setGridDimensions = (windowWidth: number) => {
 }
 
 const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
-   const gridCells = props.products.map((item) =>
-      <ItemCard
+   const gridCells = props.products.map(item =>
+      <GridItem
          key={item.product_id}
          name={item.product_name}
          price={item.price}
@@ -85,7 +92,7 @@ const SearchResultsGridView: FC<Props> = (props: Props) => {
    setGridDimensions(state.windowWidth);
 
    return (
-      <div className="Results-container" style={styles.containerStyle}>
+      <div className="Grid-container" style={styles.containerStyle}>
          <div className="Results-header">
             Found {props.numberOfResults} products
          </div>

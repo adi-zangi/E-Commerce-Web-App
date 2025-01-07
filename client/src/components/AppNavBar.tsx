@@ -1,3 +1,8 @@
+/**
+ * A navigation bar that contains the app logo and buttons for the main app 
+ * actions
+ */
+
 import { FC } from 'react';
 import { Alignment, Button, Navbar } from '@blueprintjs/core';
 import { AppState } from '../utils/dataTypes';
@@ -8,7 +13,7 @@ interface Props {
    setState: (newState : AppState) => void;
 }
 
-const NavigationMenu: FC<Props> = (props: Props) => {
+const AppNavBar: FC<Props> = (props: Props) => {
 
    const handleLogoClick = () => {
       window.location.reload();
@@ -28,4 +33,4 @@ const NavigationMenu: FC<Props> = (props: Props) => {
    );
 }
 
- export default NavigationMenu;
+ export default AppNavBar;

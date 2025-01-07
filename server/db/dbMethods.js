@@ -37,9 +37,20 @@ const getProductsByQuery = (query) => {
    });
 }
 
-const getDepartments = () => {
+const getProductsByCategory = (category_id) => {
    return new Promise((resolve, reject) => {
-      pool.query('query', (error, results) => {
+      pool.query(`SELECT * FROM Products WHERE category_id=${category_id}`, (error, results) => {
+         if (error) {
+            reject(error);
+         }
+         resolve(results.rows);
+      });
+   });
+}
+
+const getAllDepartments = () => {
+   return new Promise((resolve, reject) => {
+      pool.query(`SELECT * FROM Departments`, (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -49,9 +60,9 @@ const getDepartments = () => {
    });
 }
 
-const getCategoriesForDepartment = (department) => {
+const getCategoriesForDepartment = (department_id) => {
    return new Promise((resolve, reject) => {
-      pool.query('query', (error, results) => {
+      pool.query(`SELECT * FROM Categories WHERE department_id=${department_id}`, (error, results) => {
          if (error) {
             reject(error);
          }
@@ -62,5 +73,8 @@ const getCategoriesForDepartment = (department) => {
 
 module.exports = {
    getAllProducts,
-   getProductsByQuery
+   getProductsByQuery,
+   getProductsByCategory,
+   getAllDepartments,
+   getCategoriesForDepartment
 };

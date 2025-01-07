@@ -1,3 +1,7 @@
+/**
+ * Creates an HTTP client with configurations using axios
+ */
+
 import axios from 'axios';
 import env from '../env.json';
 

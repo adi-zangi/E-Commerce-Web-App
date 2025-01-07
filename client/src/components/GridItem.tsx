@@ -1,3 +1,7 @@
+/**
+ * A card that displays a single store product in a grid view
+ */
+
 import { FC } from 'react';
 
 interface Props {
@@ -7,19 +11,19 @@ interface Props {
 }
 
 export const imageStyle = {
-   width: 190,
-   height: 190,
+   width: 180,
+   height: 180,
 }
 
-export const cardStyle = {
+export const gridItemStyle = {
    width: 370,
-   height: 235,
+   height: 225,
    borderThickness: 1,
 }
 
-const ItemCard: FC<Props> = (props: Props) => {
+const GridItem: FC<Props> = (props: Props) => {
    return (
-      <div className="Item-card" style={cardStyle}>
+      <div className="Item-card" style={gridItemStyle}>
          <a className="Item-link">
             <img src={props.image} style={imageStyle} alt="image" />
             <div className="Item-desc">
@@ -31,4 +35,4 @@ const ItemCard: FC<Props> = (props: Props) => {
    );
 }
 
- export default ItemCard;
+ export default GridItem;

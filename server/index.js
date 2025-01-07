@@ -40,11 +40,38 @@ app.get('/products/search/:search_query', (req, res) => {
    })
 });
 
+// Get products by a category
+app.get('/products/category/:category_id', (req, res) => {
+   db.getProductsByCategory(req.params.category_id)
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get all departments
-app.get('/departments')
+app.get('/departments', (req, res) => {
+   db.getAllDepartments()
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
 
 // Get categories for a department
-app.get('/department/:department/categories')
+app.get('/department/:department_id/categories', (req, res) => {
+   db.getCategoriesForDepartment(req.params.department_id)
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
 
 app.listen(serverPort, () => {
    console.log(`Listening on port ${serverPort}`)

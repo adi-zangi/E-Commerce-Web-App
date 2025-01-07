@@ -1,3 +1,7 @@
+/**
+ * The contents of the home page of the app
+ */
+
 import { FC } from 'react';
 import logo from '../logos/logo.svg';
 import '../styles/App.css';

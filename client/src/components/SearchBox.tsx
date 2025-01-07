@@ -1,3 +1,7 @@
+/**
+ * A search box that allows to search for store products
+ */
+
 import { FC } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
 import { useRef } from 'react';
@@ -15,7 +19,11 @@ const SearchBox: FC<Props> = (props: Props) => {
    const handleSearchClick = () => {
       const query = searchBox.current?.value;
       if (query != undefined) {
-         props.setState({page: Page.SearchResults, searchQuery: query});
+         props.setState({
+            page: Page.SearchResults,
+            searchQuery: query,
+            selectedCategory: null,
+         });
       }
    }
 

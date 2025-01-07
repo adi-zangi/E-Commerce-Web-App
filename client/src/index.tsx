@@ -4,6 +4,11 @@ import './styles/index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import "@blueprintjs/core/lib/css/blueprint.css";
+import { FocusStyleManager } from "@blueprintjs/core";
+
+// Show a blue outline around active elements when interacting with the tab key
+// but not when interacting with the mouse
+FocusStyleManager.onlyShowFocusOnTabs();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
