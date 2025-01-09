@@ -5,7 +5,7 @@
 
 import { FC } from 'react';
 import { Alignment, Button, Navbar } from '@blueprintjs/core';
-import { AppState } from '../utils/dataTypes';
+import { AppState, Page } from '../utils/dataTypes';
 import SearchBox from './SearchBox';
 
 interface Props {
@@ -19,14 +19,34 @@ const AppNavBar: FC<Props> = (props: Props) => {
       window.location.reload();
    }
 
+   const handleSignInClick = () => {
+      props.setState({...props.state, page: Page.LogIn});
+   }
+
    return (
       <Navbar>
          <Navbar.Group align={Alignment.LEFT}>
-            <Button className="Logo-btn bp5-large" onClick={handleLogoClick} />
+            <Button
+               className="Logo-btn bp5-large"
+               onClick={handleLogoClick} />
          </Navbar.Group>
          <Navbar.Group align={Alignment.RIGHT}>
-            <Button className="bp5-minimal" icon="user" text="Sign In" />
-            <Button className="bp5-minimal" icon="shopping-cart" text="Cart" />
+            { props.state.user === null ?
+               <Button
+                  className="bp5-minimal"
+                  icon="user"
+                  text="Sign In"
+                  onClick={handleSignInClick} />
+               :
+               <Button
+                  className="bp5-minimal"
+                  text={`Hello, ${props.state.user.first_name} ${props.state.user.last_name}`}
+               />
+            }
+            <Button
+               className="bp5-minimal"
+               icon="shopping-cart"
+               text="Cart" />
          </Navbar.Group>
          <SearchBox state={props.state} setState={props.setState} />
       </Navbar>

@@ -18,6 +18,17 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Get a user by email
+app.get('/users/:email', (req, res) => {
+   db.getUser(req.params.email)
+   .then(val => {
+      res.status(200).send(val[0]);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get all products
 app.get('/products', (req, res) => {
    db.getAllProducts()

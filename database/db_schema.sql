@@ -1,5 +1,13 @@
 -- The e-commerce shop database schema
 
+-- Table for users
+CREATE TABLE Users (
+   user_email VARCHAR PRIMARY KEY,
+   first_name VARCHAR NOT NULL,
+   last_name VARCHAR NOT NULL,
+   user_password VARCHAR NOT NULL
+);
+
 -- Table for the departments in the shop
 CREATE TABLE Departments (
    department_id INTEGER PRIMARY KEY,

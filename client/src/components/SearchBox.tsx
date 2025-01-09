@@ -20,6 +20,7 @@ const SearchBox: FC<Props> = (props: Props) => {
       const query = searchBox.current?.value;
       if (query != undefined) {
          props.setState({
+            ...props.state,
             page: Page.SearchResults,
             searchQuery: query,
             selectedCategory: null,

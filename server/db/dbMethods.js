@@ -13,6 +13,18 @@ const pool = new Pool ({
     port: env.DB_PORT,
 });
 
+const getUser = (email) => {
+   return new Promise((resolve, reject) => {
+      pool.query(`SELECT * FROM Users WHERE user_email='${email}'`, (error, results) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(results.rows);
+         }
+      });
+   });
+}
+
 const getAllProducts = () => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Products`, (error, results) => {
@@ -72,6 +84,7 @@ const getCategoriesForDepartment = (department_id) => {
 }
 
 module.exports = {
+   getUser,
    getAllProducts,
    getProductsByQuery,
    getProductsByCategory,

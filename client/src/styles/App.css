@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 35vmin;
   pointer-events: none;
 }
 
@@ -27,11 +27,14 @@
 }
 
 .Search-bar {
+   width: 100%;
    height: 100%;
+   position: absolute;
+   left: 0;
+   z-index: -1;
    display: flex;
    justify-content: center;
    align-items: center;
-   margin-left: 15%;
 }
 
 .Search-input {
@@ -116,4 +119,27 @@
 
 .Page-down-btn {
    margin-right: 10px;
+}
+
+.Login-form {
+   display: flex;
+   height: 100vh;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+}
+
+.Login-form-header {
+   margin-bottom: 60px;
+   font-size: 2.5em;
+   font-weight: bold;
+}
+
+.Login-input {
+   width: 260px;
+}
+
+.Login-btn {
+   margin-top: 30px;
+   background-color:mediumslateblue !important;
 }

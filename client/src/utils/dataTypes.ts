@@ -4,13 +4,22 @@
 
 export enum Page {
    Home,
+   LogIn,
    SearchResults,
 }
 
 export interface AppState {
    page: Page;
+   user: User | null;
    searchQuery: string;
    selectedCategory: Category | null;
+}
+
+export interface User {
+   user_email: string;
+   first_name: string;
+   last_name: string;
+   user_password: string;
 }
 
 export interface Department {
