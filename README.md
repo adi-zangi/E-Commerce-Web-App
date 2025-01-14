@@ -1,9 +1,17 @@
 # E-Commerce-Web-App
-A partially complete web application for an online store called AZ Shop.
+A web application for an online store called AZ Shop. <br /><br />
 
-## Required software
+<img src="/screenshots/homepage.png?raw=true" />
 
-- Node.js
+## Table of contents
+* [Prerequisites](#Prerequisites)
+* [Set up the database](#Set-up-the-database)
+* [Run the application](#Run-the-application)
+* [Features](#Features)
+
+## Prerequisites
+
+- NodeJS
 - npm
 - Python 3
 - PostgreSQL
@@ -21,7 +29,7 @@ CREATE DATABASE e_commerce_shop;
 \q
 ```
 
-Create a file called ```env.json``` in ```E-Commerce-Web-App/client/src/``` and paste this JSON object in the file. This file sets the ports the app will use and the database connection information.
+Create a file called ```env.json``` in ```E-Commerce-Web-App/client/src``` and paste this JSON object in the file. This file is needed to set the ports the app will use and the database connection information.
 
 ```
 {
@@ -57,3 +65,34 @@ yarn install
 yarn start
 ```
 
+## Features
+
+* [Search for products](#Search-for-products)
+* [View products by department and category](#View-products-by-department-and-category)
+* [Log in](#Log-in)
+
+### Search for products
+Search for products by typing keywords into the search bar and clicking on the search button. An empty search shows all the products in the store.
+
+For example:
+
+<img src="/screenshots/example_search.png?raw=true" />
+
+### View products by department and category
+Use the top menu to select a product department and category.
+
+<img src="/screenshots/departments_menu_expanded.png?raw=true" />
+
+### Log in
+Click "Sign In" to get to the log in page. Currently there is only one user with the email `admin@gmail.com` and password `Admin1234&`.
+
+<img src="/screenshots/log_in_page.png?raw=true" />
+
+When a user is logged in, the Sign In button is replaced with the name of the user.
+
+<img src="/screenshots/headbar_when_logged_in.png?raw=true" />
+
+## Not implemented yet
+* Select how to sort search results
+* Create user
+* Add items to cart
