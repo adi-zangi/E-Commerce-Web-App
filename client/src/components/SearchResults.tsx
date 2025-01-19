@@ -9,6 +9,7 @@ import SearchResultsGridView from "./SearchResultsGridView";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
+import { sortProductsByRelevance } from "../utils/dataUtils";
 
 interface Props {
    state: AppState;
@@ -162,6 +163,7 @@ const SearchResults: FC<Props> = (props: Props) => {
             .catch((e: Error) => {
                console.error(e);
             });
+         results = sortProductsByRelevance(results, props.state.searchQuery);
          const itemsPerPage = 6;
          setState({
             loading: false,
