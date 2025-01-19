@@ -13,6 +13,10 @@ const pool = new Pool ({
     port: env.DB_PORT,
 });
 
+/**
+ * Gets a user
+ * @param {string} email The user's email
+ */
 const getUser = (email) => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Users WHERE user_email='${email}'`, (error, results) => {
@@ -25,6 +29,9 @@ const getUser = (email) => {
    });
 }
 
+/**
+ * Gets all the store products
+ */
 const getAllProducts = () => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Products`, (error, results) => {
@@ -37,9 +44,20 @@ const getAllProducts = () => {
    });
 }
 
-const getProductsByQuery = (query) => {
+/**
+ * Gets the store products that match a search query
+ * A product is considered a match if the product name contains all the words
+ * in the search query
+ * @param {string} searchQuery The search query
+ */
+const getProductsByQuery = (searchQuery) => {
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Products WHERE LOWER(product_name) LIKE LOWER('%${query}%')`, (error, results) => {
+      const searchWords = searchQuery.split(/\s/);
+      const conditionsList = searchWords.map(word => {
+         return `LOWER(product_name) LIKE LOWER('%${word}%')`
+      });
+      const conditions = conditionsList.join(' AND ');
+      pool.query(`SELECT * FROM Products WHERE ${conditions}`, (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -49,6 +67,10 @@ const getProductsByQuery = (query) => {
    });
 }
 
+/**
+ * Gets the store products with a category
+ * @param {number} category_id The category id
+ */
 const getProductsByCategory = (category_id) => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Products WHERE category_id=${category_id}`, (error, results) => {
@@ -60,6 +82,9 @@ const getProductsByCategory = (category_id) => {
    });
 }
 
+/**
+ * Gets all the departments in the store
+ */
 const getAllDepartments = () => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Departments`, (error, results) => {
@@ -72,7 +97,11 @@ const getAllDepartments = () => {
    });
 }
 
-const getCategoriesForDepartment = (department_id) => {
+/**
+ * Gets all the product categories in a department
+ * @param {number} department_id The department id
+ */
+const getCategoriesInDepartment = (department_id) => {
    return new Promise((resolve, reject) => {
       pool.query(`SELECT * FROM Categories WHERE department_id=${department_id}`, (error, results) => {
          if (error) {
@@ -89,5 +118,5 @@ module.exports = {
    getProductsByQuery,
    getProductsByCategory,
    getAllDepartments,
-   getCategoriesForDepartment
+   getCategoriesInDepartment
 };

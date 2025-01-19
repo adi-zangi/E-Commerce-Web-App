@@ -46,7 +46,7 @@ const getProductsByCategory = (categoryId: number): PromiseResponse => {
 }
 
 /**
- * Gets all the departments from the database
+ * Gets all the departments in the store from the database
  * @returns A promise on an array of Department
  */
 const getAllDepartments = () : PromiseResponse => {
@@ -54,13 +54,13 @@ const getAllDepartments = () : PromiseResponse => {
 }
 
 /**
- * Gets all the categories for a given department
+ * Gets all the product categories in a given department
  * @param departmentId The department id
  * @returns A promise on an array of Category
  */
-const getCategoriesForDepartment = (departmentId: number) : PromiseResponse => {
+const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
    return axios.get(`/department/${departmentId}/categories`)
 }
 
 export {getUser, getAllProducts, searchForProducts, getAllDepartments,
-         getCategoriesForDepartment, getProductsByCategory};
+         getCategoriesInDepartment, getProductsByCategory};

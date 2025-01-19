@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from 'react';
 import '../styles/App.css';
 import { AppState, Category, Department, Page } from '../utils/dataTypes';
 import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
-import { getAllDepartments, getCategoriesForDepartment } from '../utils/dataService';
+import { getAllDepartments, getCategoriesInDepartment } from '../utils/dataService';
 
 interface Props {
    state: AppState;
@@ -76,7 +76,7 @@ const TopMenu: FC<Props> = (props: Props) => {
       const getData = async () => {
          const categories = new Array<Array<Category>>();
          for (const department of state.departments) {
-            await getCategoriesForDepartment(department.department_id)
+            await getCategoriesInDepartment(department.department_id)
                .then((res: any) => {
                   categories.push(res.data);
                })

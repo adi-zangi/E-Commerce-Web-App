@@ -3,7 +3,7 @@
  */
 
 const express = require('express');
-const db = require('./db/dbMethods');
+const db = require('./db/dbUtils');
 const env = require('../client/src/env');
 
 const app = express();
@@ -73,9 +73,9 @@ app.get('/departments', (req, res) => {
    })
 });
 
-// Get categories for a department
+// Get all categories in a department
 app.get('/department/:department_id/categories', (req, res) => {
-   db.getCategoriesForDepartment(req.params.department_id)
+   db.getCategoriesInDepartment(req.params.department_id)
    .then(val => {
       res.status(200).send(val);
    })
