@@ -46,18 +46,22 @@ const getAllProducts = () => {
 
 /**
  * Gets the store products that match a search query
- * A product is considered a match if the product name contains all the words
- * in the search query
+ * A product is considered a match if the keyword of the product's category is
+ * contained in the search query or if the product's name contains all the
+ * words in the search query
  * @param {string} searchQuery The search query
  */
 const getProductsByQuery = (searchQuery) => {
    return new Promise((resolve, reject) => {
+      searchQuery = searchQuery.toLowerCase();
+      const categoryCondition = `category_id IN ` +
+         `(SELECT category_id FROM Categories WHERE '${searchQuery}' LIKE CONCAT('%', LOWER(category_keyword), '%'))`;
       const searchWords = searchQuery.split(/\s/);
       const conditionsList = searchWords.map(word => {
-         return `LOWER(product_name) LIKE LOWER('%${word}%')`
+         return `LOWER(product_name) LIKE '%${word}%'`
       });
-      const conditions = conditionsList.join(' AND ');
-      pool.query(`SELECT * FROM Products WHERE ${conditions}`, (error, results) => {
+      const wordConditions = conditionsList.join(' AND ');
+      pool.query(`SELECT * FROM Products WHERE (${categoryCondition}) OR (${wordConditions})`, (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -78,6 +82,21 @@ const getProductsByCategory = (category_id) => {
             reject(error);
          }
          resolve(results.rows);
+      });
+   });
+}
+
+/**
+ * Gets all the categories in the store
+ */
+const getAllCategories = () => {
+   return new Promise((resolve, reject) => {
+      pool.query(`SELECT * FROM Categories`, (error, results) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(results.rows);
+         }
       });
    });
 }
@@ -117,6 +136,7 @@ module.exports = {
    getAllProducts,
    getProductsByQuery,
    getProductsByCategory,
+   getAllCategories,
    getAllDepartments,
    getCategoriesInDepartment
 };

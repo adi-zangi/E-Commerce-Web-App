@@ -18,6 +18,7 @@ CREATE TABLE Departments (
 CREATE TABLE Categories (
    category_id INTEGER PRIMARY KEY,
    category_name VARCHAR(30) NOT NULL,
+   category_keyword VARCHAR(30) NOT NULL,
    department_id INTEGER NOT NULL,
    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
 );
