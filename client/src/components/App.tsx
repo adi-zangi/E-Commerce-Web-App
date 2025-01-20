@@ -10,6 +10,7 @@ import { AppState, Page } from '../utils/dataTypes';
 import SearchResults from './SearchResults';
 import TopMenu from './TopMenu';
 import LogInPage from './LogInPage';
+import { getIdToCategoryMap } from '../utils/dataUtils';
 
 const App: FC = () => {
    
@@ -18,6 +19,7 @@ const App: FC = () => {
       user: null,
       searchQuery: "",
       selectedCategory: null,
+      idToCategoryMap: getIdToCategoryMap(),
    });
    
    return (

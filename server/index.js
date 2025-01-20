@@ -62,6 +62,17 @@ app.get('/products/category/:category_id', (req, res) => {
    })
 });
 
+// Get all categories
+app.get('/categories', (req, res) => {
+   db.getAllCategories()
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get all departments
 app.get('/departments', (req, res) => {
    db.getAllDepartments()

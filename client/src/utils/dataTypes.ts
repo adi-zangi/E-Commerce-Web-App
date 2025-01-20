@@ -13,6 +13,7 @@ export interface AppState {
    user: User | null;
    searchQuery: string;
    selectedCategory: Category | null;
+   idToCategoryMap: Map<number, string>;
 }
 
 export interface User {

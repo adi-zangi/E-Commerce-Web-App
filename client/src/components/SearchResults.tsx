@@ -163,7 +163,8 @@ const SearchResults: FC<Props> = (props: Props) => {
             .catch((e: Error) => {
                console.error(e);
             });
-         results = sortProductsByRelevance(results, props.state.searchQuery);
+         results = sortProductsByRelevance(results, props.state.searchQuery,
+            props.state.idToCategoryMap);
          const itemsPerPage = 6;
          setState({
             loading: false,

@@ -2,65 +2,61 @@
  * Utility functions for processing data
  */
 
-import { Product } from "./dataTypes";
+import { getAllCategories } from "./dataService";
+import { Category, Product } from "./dataTypes";
+import levenshtein from "fast-levenshtein";
 
 /**
- * Returns the distance between a given product's name and a given search query
- * @param productName A product's name
- * @param query A search query
- * @returns A number representing the distance between the product's name and
- * search query. A lower number means they match more closely.
+ * Creates a map for all the categories in the store with id's as keys and
+ * category names as values
+ * @returns A map with id's and categories
  */
-const getDistanceToQuery = (productName: string, query: string) : number => {
-   let distanceToQuery = 0;
-   const lowerName = productName.toLowerCase();
-   const lowerQuery = query.toLowerCase();
-   const productWords = lowerName.split(/\s|[,]\s/);
-   const queryWords = lowerQuery.split(/\s/);
-   for (const queryWord of queryWords) {
-      let smallestDistance = 0;
-      for (const productWord of productWords) {
-         if (productWord.includes(queryWord)) {
-            const distance = productWord.length - queryWord.length;
-            if ((smallestDistance === 0) || distance < smallestDistance) {
-               smallestDistance = distance;
-            }
+const getIdToCategoryMap = () : Map<number, string> => {
+   let categories: Category[] = [];
+   let categoryMap = new Map<number, string>();
+
+   getAllCategories()
+      .then((res: any) => {
+         categories = res.data;
+         for (const category of categories) {
+            categoryMap.set(category.category_id, category.category_name);
          }
-      }
-      distanceToQuery += smallestDistance;
-   }
-   return distanceToQuery;
+         return categoryMap;
+      })
+      .catch((e: Error) => {
+         console.error(e);
+         return categoryMap;
+      });
+   
+   return categoryMap;
 }
 
 /**
  * Sorts the given array of products by relevance compared to a search query
- * The relevance is determined by how closely a product's name matches the query
+ * The relevance is determined by how closely a product's category name matches
+ * the query using Levenshtein distance to compare words
  * @param products An array of products produced by a search
  * @param query The search query
  * @returns An array of products sorted by relevance
  */
-const sortProductsByRelevance = (products: Product[], query: string) : Product[] => {
+const sortProductsByRelevance = (products: Product[], query: string,
+                                 idToCategoryMap: Map<number, string>) : Product[] => {
+
+   // Skip sorting if the query is one character or less
    if (query.length <= 1) {
       return products;
    }
-   const sorted: Product[] = [];
-   const relevanceMap = new Map<Number, Product[]>();
-   for (const product of products) {
-      const distance = getDistanceToQuery(product.product_name, query);
-      if (relevanceMap.has(distance)) {
-         relevanceMap.get(distance)?.push(product);
-      } else {
-         relevanceMap.set(distance, [product]);
-      }
-   }
-   const sortedDistance = Array.from(relevanceMap.keys()).sort();
-   for (const distance of sortedDistance) {
-      const products = relevanceMap.get(distance);
-      products?.forEach(product => {
-         sorted.push(product);
-      });
-   }
+
+   // Sort the products using Levenshtein distance
+   const sorted = products.sort((a: Product, b: Product) => {
+      const firstCategory = idToCategoryMap.get(a.category_id) + "";
+      const secondCategory = idToCategoryMap.get(b.category_id) + "";
+      const firstDistance = levenshtein.get(firstCategory, query);
+      const secondDistance = levenshtein.get(secondCategory, query);
+      return firstDistance - secondDistance;
+   });
+
    return sorted;
 }
 
-export {sortProductsByRelevance};
+export {getIdToCategoryMap, sortProductsByRelevance};
