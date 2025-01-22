@@ -13,7 +13,7 @@ INSERT INTO categories (category_id, category_name, category_keyword, department
 (2, 'Pens', 'Pen', 1),
 (3, 'Highlighters', 'Highlighter', 1),
 (4, 'Erasers', 'Eraser', 1),
-(5, 'Pencil Sharpeners', 'Sharpener', 1),
+(5, 'Pencil Sharpeners', 'Pencil Sharpener', 1),
 (6, 'Notebooks', 'Notebook', 2),
 (7, 'Notepads', 'Notepad', 2),
 (8, 'Sticky Notes', 'Sticky', 2);
