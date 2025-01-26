@@ -6,13 +6,11 @@ export enum Page {
    Home,
    LogIn,
    SearchResults,
+   NoPage,
 }
 
 export interface AppState {
-   page: Page;
    user: User | null;
-   searchQuery: string;
-   selectedCategory: Category | null;
    idToCategoryMap: Map<number, string>;
 }
 

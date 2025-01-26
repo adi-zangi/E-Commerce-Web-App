@@ -7,20 +7,28 @@ import { FC } from 'react';
 import { Alignment, Button, Navbar } from '@blueprintjs/core';
 import { AppState, Page } from '../utils/dataTypes';
 import SearchBox from './SearchBox';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
 }
 
 const AppNavBar: FC<Props> = (props: Props) => {
 
+   const navigate = useNavigate();
+
    const handleLogoClick = () => {
-      window.location.reload();
+      if (props.page === Page.Home) {
+         navigate(0);
+      } else {
+         navigate("/");
+      }
    }
 
    const handleSignInClick = () => {
-      props.setState({...props.state, page: Page.LogIn});
+      navigate("/login");
    }
 
    return (
@@ -33,10 +41,10 @@ const AppNavBar: FC<Props> = (props: Props) => {
          <Navbar.Group align={Alignment.RIGHT}>
             { props.state.user === null ?
                <Button
-                  className="bp5-minimal"
-                  icon="user"
-                  text="Sign In"
-                  onClick={handleSignInClick} />
+               className="bp5-minimal"
+               icon="user"
+               text="Sign In"
+               onClick={handleSignInClick} />
                :
                <Button
                   className="bp5-minimal"
@@ -48,7 +56,7 @@ const AppNavBar: FC<Props> = (props: Props) => {
                icon="shopping-cart"
                text="Cart" />
          </Navbar.Group>
-         <SearchBox state={props.state} setState={props.setState} />
+         <SearchBox page={props.page} state={props.state} setState={props.setState} />
       </Navbar>
    );
 }

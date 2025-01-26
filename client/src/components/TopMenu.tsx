@@ -7,8 +7,10 @@ import '../styles/App.css';
 import { AppState, Category, Department, Page } from '../utils/dataTypes';
 import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { getAllDepartments, getCategoriesInDepartment } from '../utils/dataService';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
 }
@@ -57,6 +59,8 @@ const TopMenu: FC<Props> = (props: Props) => {
       categories: [],
    });
 
+   const navigate = useNavigate();
+
    // Gets a list of departments from the database
    useEffect(() => {
       const getData = async () => {
@@ -92,10 +96,7 @@ const TopMenu: FC<Props> = (props: Props) => {
    }, [state.departments]);
 
    const handleMenuItemClick = async (category: Category) => {
-      props.setState({
-         ...props.state,
-         page: Page.SearchResults,
-         selectedCategory: category});
+      navigate("/results/category/?c=" + category.category_name.replaceAll(/\s/g, "+"));
    }
 
    const menuItems = state.departments.map((department, index) => 

@@ -4,11 +4,12 @@
  */
 
 import { FC, useEffect, useState } from 'react';
-import { AppState, Product } from '../utils/dataTypes';
+import { AppState, Page, Product } from '../utils/dataTypes';
 import GridItem, { gridItemStyle } from './GridItem';
 import { styleVars } from './SearchResults';
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
    products: Array<Product>;
@@ -87,7 +88,7 @@ const SearchResultsGridView: FC<Props> = (props: Props) => {
       return () => {
          window.removeEventListener('resize', handleResize);
       }
-   }, [props.state.page])
+   }, [props.page]);
 
    setGridDimensions(state.windowWidth);
 

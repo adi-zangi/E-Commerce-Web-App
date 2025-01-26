@@ -11,11 +11,11 @@ import levenshtein from "fast-levenshtein";
  * and category names as values
  * @returns A map with id's and categories
  */
-const getIdToCategoryMap = () : Map<number, string> => {
+const getIdToCategoryMap = async () : Promise<Map<number, string>> => {
    let categories: Category[] = [];
    let categoryMap = new Map<number, string>();
 
-   getAllCategories()
+   await getAllCategories()
       .then((res: any) => {
          categories = res.data;
          for (const category of categories) {
@@ -66,6 +66,7 @@ const getDistanceToQuery = (str: string, query: string) : number => {
  * the query and then how closely a products's name matches the query
  * @param products An array of products produced by a search
  * @param query The search query
+ * @param idToCategoryMap A map of category id's and names
  * @returns An array of products sorted by relevance
  */
 const sortProductsByRelevance = (products: Product[], query: string,

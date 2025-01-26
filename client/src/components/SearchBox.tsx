@@ -2,31 +2,49 @@
  * A search box that allows to search for store products
  */
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
 import { useRef } from 'react';
 import { AppState, Page } from '../utils/dataTypes';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
 }
 
 const SearchBox: FC<Props> = (props: Props) => {
 
+   const navigate = useNavigate();
+
+   const [searchParams] = useSearchParams();
+
    const searchBox = useRef<HTMLInputElement>(null);
 
    const handleSearchClick = () => {
       const query = searchBox.current?.value;
-      if (query != undefined) {
-         props.setState({
-            ...props.state,
-            page: Page.SearchResults,
-            searchQuery: query,
-            selectedCategory: null,
-         });
+      if (query !== undefined) {
+         if (query.length > 0) {
+            navigate("/results/search/?q=" + query.replaceAll(/\s/g, "+"));
+         } else {
+            navigate("/results/all");
+         }
       }
    }
+
+   useEffect(() => {
+      if (searchBox.current) {
+         let query = "";
+         if (searchParams.has("q")) {
+            query = searchParams.get("q") + "";
+            query = query.replaceAll("+", " ");
+         }
+         if (searchBox.current && (searchBox.current.value !== query)) {
+            searchBox.current.value = query;
+         }
+      }
+   }, [searchParams]);
 
    return (
       <div className="Search-bar">

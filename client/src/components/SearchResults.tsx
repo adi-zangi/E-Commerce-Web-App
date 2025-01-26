@@ -4,14 +4,16 @@
  */
 
 import { FC, useEffect, useRef, useState } from "react";
-import { AppState, Product } from "../utils/dataTypes";
+import { AppState, Page, Product } from "../utils/dataTypes";
 import SearchResultsGridView from "./SearchResultsGridView";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
 import { sortProductsByRelevance } from "../utils/dataUtils";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
 }
@@ -31,6 +33,11 @@ interface State {
    numberOfPages: number;
 }
 
+interface Params {
+   query: string | null;
+   categoryId: number | null;
+}
+
 export const styleVars = {
    widthFactor: 0.9
 }
@@ -40,15 +47,57 @@ const containerStyle = {
 }
 
 /**
+ * Returns an object containing search parameters from the given URLSearchParams
+ * @param params The search parameters as URLSearchParams 
+ * @param idToCategoryMap A map of category id's and names
+ * @returns An object containing search parameters
+ */
+const parseSearchParams = (params: URLSearchParams, idToCategoryMap: Map<number, string>) : Params => {
+   let query = params.get("q");
+   let category = params.get("c");
+   let categoryId = null;
+   if (query) {
+      query.replaceAll("+", " ");
+   }
+   if (category) {
+      category = category.replaceAll("+", " ");
+      idToCategoryMap.forEach((val, key) => {
+         if (val === category) {
+            categoryId = key;
+         }
+      });
+   }
+   return {query: query, categoryId: categoryId};
+}
+
+/**
  * Gets the search results from the database based on the current query or
  * selected shop category
- * @param state The app state
+ * @param params Search parameters from the current url
  */
-const getSearchResults = (state: AppState) : Promise<AxiosResponse<any, any>> => {
-   if (state.selectedCategory) {
-      return getProductsByCategory(state.selectedCategory.category_id);
+const getSearchResults = (params: Params) : Promise<AxiosResponse<any, any>> => {
+   if (params.query) {
+      return searchForProducts(params.query);
+   } else if (params.categoryId) {
+      return getProductsByCategory(params.categoryId);
+   } else {
+      return searchForProducts("");
    }
-   return searchForProducts(state.searchQuery);
+}
+
+/**
+ * Sorts the search results by relevance
+ * @param results The search results
+ * @param params Search parameters from the current url
+ * @param idToCategoryMap A map of category id's and names
+ */
+const sortResults = (results: Product[], params: Params, idToCategoryMap: Map<number, string>) : Product[] => {
+   let query = params.query;
+   query = query ? query.replaceAll("+", " ") : query;
+   if (query) {
+      return sortProductsByRelevance(results, query, idToCategoryMap);
+   }
+   return results;
 }
 
 /**
@@ -153,18 +202,23 @@ const SearchResults: FC<Props> = (props: Props) => {
       numberOfPages: 0,
    });
 
+   const [searchParams] = useSearchParams();
+
    useEffect(() => {
       const initializeData = async () => {
+         if (props.state.idToCategoryMap.size === 0) {
+            return;
+         }
          let results = new Array<Product>();
-         await getSearchResults(props.state)
+         const params = parseSearchParams(searchParams, props.state.idToCategoryMap);
+         await getSearchResults(params)
             .then((res: any) => {
                results = res.data;
             })
             .catch((e: Error) => {
                console.error(e);
             });
-         results = sortProductsByRelevance(results, props.state.searchQuery,
-            props.state.idToCategoryMap);
+         results = sortResults(results, params, props.state.idToCategoryMap);
          const itemsPerPage = 6;
          setState({
             loading: false,
@@ -176,7 +230,7 @@ const SearchResults: FC<Props> = (props: Props) => {
          })
       }
       initializeData();
-   }, [props]);
+   }, [searchParams, props.state.idToCategoryMap]);
 
    const setPage = (page: number) => {
       setState({
@@ -200,6 +254,7 @@ const SearchResults: FC<Props> = (props: Props) => {
          }
          { !state.loading && (state.results.length > 0) && 
                <SearchResultsGridView
+                  page={props.page}
                   state={props.state}
                   setState={props.setState}
                   products={state.pageData}

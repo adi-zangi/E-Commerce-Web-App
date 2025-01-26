@@ -6,8 +6,10 @@ import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import { FC, useRef, useState } from "react";
 import { AppState, Page, User } from "../utils/dataTypes";
 import { getUser } from "../utils/dataService";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
+   page: Page;
    state: AppState;
    setState: (newState : AppState) => void;
 }
@@ -32,6 +34,8 @@ const defaultState : State = {
 
 const LogInPage: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>(defaultState);
+
+   const navigate = useNavigate();
 
    const emailRef = useRef<HTMLInputElement>(null);
    const passwordRef = useRef<HTMLInputElement>(null);
@@ -80,8 +84,8 @@ const LogInPage: FC<Props> = (props: Props) => {
          props.setState({
             ...props.state,
             user: user,
-            page: Page.Home,
-         })
+         });
+         navigate(-1);
       } else {
          const passwordHelptext = "This password is incorrect. Please try again.";
          setState({
@@ -121,7 +125,6 @@ const LogInPage: FC<Props> = (props: Props) => {
                type="text"
                placeholder="Email"
                intent={state.emailValid ? "none" : "danger"}
-               data-lpignore="true"
                inputRef={emailRef} />
          </FormGroup>
          <FormGroup
@@ -133,7 +136,6 @@ const LogInPage: FC<Props> = (props: Props) => {
                rightElement={lockButton}
                type={state.showPassword ? "text" : "password"}
                intent={state.passwordValid ? "none" : "danger"}
-               data-lpignore="true"
                inputRef={passwordRef} />
          </FormGroup>
          <Button
