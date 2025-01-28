@@ -1,13 +1,15 @@
 # E-Commerce-Web-App
-A web application for an online store called AZ Shop. <br /><br />
+A web application for an online store called AZ Shop. 
 
-<img src="/screenshots/homepage.png?raw=true" />
+<br />
+
+<img width="1280" alt="homepage" src="https://github.com/user-attachments/assets/94b6eb38-1640-4637-90a2-d6a9016e23bd" />
 
 ## Table of contents
 * [Prerequisites](#Prerequisites)
 * [Set up the database](#Set-up-the-database)
 * [Run the application](#Run-the-application)
-* [Features](#Features)
+* [Features (includes GIFs)](#Features)
 
 ## Prerequisites
 
@@ -67,32 +69,52 @@ yarn start
 
 ## Features
 
-* [Search for products](#Search-for-products)
-* [View products by department and category](#View-products-by-department-and-category)
-* [Log in](#Log-in)
-
-### Search for products
-Search for products by typing keywords into the search bar and clicking on the search button. An empty search shows all the products in the store.
-
-For example:
-
-<img src="/screenshots/example_search.png?raw=true" />
-
-### View products by department and category
-Use the top menu to select a product department and category.
-
-<img src="/screenshots/departments_menu_expanded.png?raw=true" />
+* [Log in](#log-in)
+* [Search for products](#search-for-products)
+* [View products by department and category](#view-products-by-department-and-category)
+* [A screen that adjusts when window size changes](#a-screen-that-adjusts-when-window-size-changes)
+* [Working forward, back, and refresh buttons](#working-forward-and-back-buttons)
 
 ### Log in
 Click "Sign In" to get to the log in page. Currently there is only one user with the email `admin@gmail.com` and password `Admin1234&`.
 
-<img src="/screenshots/log_in_page.png?raw=true" />
+<img width="1280" alt="log_in_page" src="https://github.com/user-attachments/assets/7ac536d9-61b5-4e86-9963-bf4f9e8816f7" />
+
+<br />
 
 When a user is logged in, the Sign In button is replaced with the name of the user.
 
-<img src="/screenshots/headbar_when_logged_in.png?raw=true" />
+<img width="1280" alt="headbar_when_logged_in" src="https://github.com/user-attachments/assets/aaea7730-bb36-4362-873d-34722b117721" />
+
+### Search for products
+<p>
+Search for products by typing keywords into the search bar and clicking on the search button. An empty search shows all the products in the store.
+</p>
+
+<p>
+Relevant results show first.
+</p>
+
+<img width="1280" alt="example_search" src="https://github.com/user-attachments/assets/36c03997-c6e3-40d1-9687-07a9a1e5730f" />
+
+#### Navigate between pages
+Use the page forward and back buttons or type in a page number and then click one of the arrow buttons.
+
+![search_example](https://github.com/user-attachments/assets/c98c040f-45d2-40b6-919a-594d232b5c01)
+
+### View products by department and category
+Use the top menu to select a product department and category.
+
+![departments_menu](https://github.com/user-attachments/assets/d0fd16f0-e811-463c-9a87-0bdefe722d41)
+
+### A screen that adjusts when window size changes
+
+![screen_adjusting](https://github.com/user-attachments/assets/2cbd394e-cbd2-419a-b8d3-ae6b34ef0f7b)
+
+### Working forward and back buttons
 
 ## Not implemented yet
 * Select how to sort search results
 * Create user
 * Add items to cart
+* Checkout
