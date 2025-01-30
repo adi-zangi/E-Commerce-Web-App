@@ -6,92 +6,99 @@ import { FC, useEffect, useState } from 'react';
 import '../styles/App.css';
 import HomePage from './HomePage';
 import AppNavBar from './AppNavBar';
-import { AppState, Page } from '../utils/dataTypes';
+import { AppState, Page, User } from '../utils/dataTypes';
 import SearchResults from './SearchResults';
 import TopMenu from './TopMenu';
 import LogInPage from './LogInPage';
 import { getIdToCategoryMap } from '../utils/dataUtils';
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import NoPage from './NoPage';
+
+/**
+ * Returns the value of a page from the Page enum that matches the given pathname
+ * @param pathname The pathname of a URL
+ * @returns The Page enum value based on the given pathname
+ */
+const getPageFromPath = (pathname: string): Page => {
+   if (pathname === "/") {
+      return Page.Home;
+   } else if (pathname === "/login") {
+      return Page.LogIn;
+   } else if (pathname.includes("/results")) {
+      return Page.SearchResults;
+   }
+   return Page.NoPage;
+}
 
 const App: FC = () => {
    
-   const [state, setState] = useState<AppState>({
+   const [state, setState] = useState<AppState>(() => ({
+      page: Page.Home,
       user: null,
+      loading: true,
       idToCategoryMap: new Map(),
-   });
+   }));
 
-   const [page, setPage] = useState<Page>(Page.Home);
-
+   const navigate = useNavigate();
    const location = useLocation();
 
-   const getPage = (pathname: string): Page => {
-      if (pathname === "/") {
-         return Page.Home;
-      } else if (pathname === "/login") {
-         return Page.LogIn;
-      } else if (pathname.includes("/results")) {
-         return Page.SearchResults;
-      }
-      return Page.NoPage;
-   }
-
+   // Gets the initial state of the app
    useEffect(() => {
-      const getCategoryMap = async () => {
+      const initState = async () => {
+         const user = localStorage.getItem("user") + "";
+         const userObj = JSON.parse(user) as User;
          const categoryMap = await getIdToCategoryMap();
          setState({
-            ...state,
+            user: userObj,
+            page: getPageFromPath(location.pathname),
+            loading: false,
             idToCategoryMap: categoryMap,
          });
       }
-      getCategoryMap();
+      initState();
    }, []);
 
+   // Updates the current page type whenever the URL changes
    useEffect(() => {
-      setPage(getPage(location.pathname));
+      if (!state.loading) {
+         setState({
+            ...state,
+            page: getPageFromPath(location.pathname),
+         });
+      }
    }, [location]);
+
+   const setUser = (user: User) => {
+      localStorage.setItem("user", JSON.stringify(user));
+      setState({ ...state, user: user });
+   }
+
+   const logOutUser = () => {
+      localStorage.removeItem("user");
+      navigate(0);
+      setState({ ...state, user: null, loading: true });
+   }
    
    return (
       <div className="App">
          <Routes>
             <Route path="/" element={
                <>
-                  <TopMenu
-                     page={page}
-                     state={state}
-                     setState={setState} />
-                  <AppNavBar
-                     page={page}
-                     state={state}
-                     setState={setState} />
-                  <HomePage
-                     page={page}
-                     state={state}
-                     setState={setState} />
+                  <TopMenu state={state} />
+                  <AppNavBar state={state} logOutUser={logOutUser} />
+                  <HomePage state={state} />
                </>
                }
             />
             <Route path="/login" element={
-               <LogInPage
-                  page={page}
-                  state={state}
-                  setState={setState} />
+               <LogInPage state={state} setUser={setUser} />
                }
             />
             <Route path="/results/all?/search?/:query?/category?/:category?" element={
                <>
-                  <TopMenu
-                     page={page}
-                     state={state}
-                     setState={setState} />
-                  <AppNavBar
-                     page={page}
-                     state={state}
-                     setState={setState} />
-                  <SearchResults
-                     page={page}
-                     state={state}
-                     setState={setState} />
+                  <TopMenu state={state} />
+                  <AppNavBar state={state} logOutUser={logOutUser} />
+                  <SearchResults state={state} />
                </>
                }
             />

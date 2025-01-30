@@ -10,7 +10,9 @@ export enum Page {
 }
 
 export interface AppState {
+   page: Page;
    user: User | null;
+   loading: boolean;
    idToCategoryMap: Map<number, string>;
 }
 

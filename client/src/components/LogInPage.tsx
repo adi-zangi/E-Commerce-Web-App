@@ -9,9 +9,8 @@ import { getUser } from "../utils/dataService";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
+   setUser: (user: User) => void;
 }
 
 interface State {
@@ -81,10 +80,7 @@ const LogInPage: FC<Props> = (props: Props) => {
             passwordHelptext: passwordHelptext,
          });
       } else if (user['user_password'] === password) {
-         props.setState({
-            ...props.state,
-            user: user,
-         });
+         props.setUser(user);
          navigate(-1);
       } else {
          const passwordHelptext = "This password is incorrect. Please try again.";

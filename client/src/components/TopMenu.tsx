@@ -10,9 +10,7 @@ import { getAllDepartments, getCategoriesInDepartment } from '../utils/dataServi
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
 }
 
 interface DepartmentProps {

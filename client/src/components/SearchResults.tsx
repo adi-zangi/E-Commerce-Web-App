@@ -13,9 +13,7 @@ import { sortProductsByRelevance } from "../utils/dataUtils";
 import { useSearchParams } from "react-router-dom";
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
 }
 
 interface PagePickerProps {
@@ -254,9 +252,7 @@ const SearchResults: FC<Props> = (props: Props) => {
          }
          { !state.loading && (state.results.length > 0) && 
                <SearchResultsGridView
-                  page={props.page}
                   state={props.state}
-                  setState={props.setState}
                   products={state.pageData}
                   numberOfResults={state.results.length} />
          }

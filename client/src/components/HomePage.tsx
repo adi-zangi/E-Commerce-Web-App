@@ -8,9 +8,7 @@ import '../styles/App.css';
 import { AppState, Page } from '../utils/dataTypes';
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
 }
 
 const HomePage: FC<Props> = (props: Props) => {

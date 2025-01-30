@@ -4,15 +4,39 @@
  */
 
 import { FC } from 'react';
-import { Alignment, Button, Navbar } from '@blueprintjs/core';
+import { Alignment, Button, Menu, MenuItem, Navbar, Popover } from '@blueprintjs/core';
 import { AppState, Page } from '../utils/dataTypes';
 import SearchBox from './SearchBox';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
+   logOutUser: () => void;
+}
+
+const ProfileButton: FC<Props> = (props: Props) => {
+   
+   const handleSignOutClick = () => {
+      props.logOutUser();
+   }
+
+   const dropdownMenu =
+      <Menu small>
+         <MenuItem
+            text="Sign Out" 
+            icon="log-out"
+            onClick={handleSignOutClick}
+            />
+      </Menu>
+   
+   return (
+      <Popover minimal content={dropdownMenu} placement="bottom">
+         <Button 
+                  className="bp5-minimal"
+                  text={`Hello, ${props.state.user?.first_name} ${props.state.user?.last_name}`}
+               />
+      </Popover>
+   );
 }
 
 const AppNavBar: FC<Props> = (props: Props) => {
@@ -20,7 +44,7 @@ const AppNavBar: FC<Props> = (props: Props) => {
    const navigate = useNavigate();
 
    const handleLogoClick = () => {
-      if (props.page === Page.Home) {
+      if (props.state.page === Page.Home) {
          navigate(0);
       } else {
          navigate("/");
@@ -44,19 +68,17 @@ const AppNavBar: FC<Props> = (props: Props) => {
                className="bp5-minimal"
                icon="user"
                text="Sign In"
+               loading={props.state.loading}
                onClick={handleSignInClick} />
                :
-               <Button
-                  className="bp5-minimal"
-                  text={`Hello, ${props.state.user.first_name} ${props.state.user.last_name}`}
-               />
+               <ProfileButton state={props.state} logOutUser={props.logOutUser} />
             }
             <Button
                className="bp5-minimal"
                icon="shopping-cart"
                text="Cart" />
          </Navbar.Group>
-         <SearchBox page={props.page} state={props.state} setState={props.setState} />
+         <SearchBox state={props.state} />
       </Navbar>
    );
 }

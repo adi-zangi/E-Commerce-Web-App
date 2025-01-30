@@ -9,9 +9,7 @@ import GridItem, { gridItemStyle } from './GridItem';
 import { styleVars } from './SearchResults';
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
    products: Array<Product>;
    numberOfResults: number;
 }
@@ -88,7 +86,7 @@ const SearchResultsGridView: FC<Props> = (props: Props) => {
       return () => {
          window.removeEventListener('resize', handleResize);
       }
-   }, [props.page]);
+   }, [props.state.page]);
 
    setGridDimensions(state.windowWidth);
 

@@ -9,9 +9,7 @@ import { AppState, Page } from '../utils/dataTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Props {
-   page: Page;
    state: AppState;
-   setState: (newState : AppState) => void;
 }
 
 const SearchBox: FC<Props> = (props: Props) => {
