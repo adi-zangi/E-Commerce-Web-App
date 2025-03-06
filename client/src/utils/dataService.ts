@@ -4,8 +4,23 @@
 
 import { AxiosResponse } from 'axios';
 import axios from './axiosConfig';
+import { User } from './dataTypes';
 
 type PromiseResponse = Promise<AxiosResponse<any, any>>;
+
+/**
+ * Adds a new user to the database
+ * @param user The new user's User object
+ * @returns A promise on the new user's User object
+ */
+const addUser = (user: User) : PromiseResponse => {
+   return axios.post(`/users/create`, {
+      email: user.user_email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      password: user.user_password
+   });
+}
 
 /**
  * Gets a user from the database
@@ -70,5 +85,5 @@ const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
    return axios.get(`/department/${departmentId}/categories`)
 }
 
-export {getUser, getAllProducts, searchForProducts, getAllCategories,
+export {addUser, getUser, getAllProducts, searchForProducts, getAllCategories,
          getAllDepartments, getCategoriesInDepartment, getProductsByCategory};

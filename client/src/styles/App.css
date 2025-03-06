@@ -121,7 +121,7 @@
    margin-right: 10px;
 }
 
-.Login-form {
+.User-form {
    display: flex;
    height: 100vh;
    flex-direction: column;
@@ -129,17 +129,20 @@
    justify-content: center;
 }
 
-.Login-form-header {
+.User-form-header {
    margin-bottom: 60px;
    font-size: 2.5em;
    font-weight: bold;
 }
 
-.Login-input {
+.User-form-input {
    width: 260px;
 }
 
-.Login-btn {
+.User-form-btn {
    margin-top: 30px;
-   background-color:mediumslateblue !important;
+}
+
+.Create-user-link {
+   margin-top: 30px;
 }

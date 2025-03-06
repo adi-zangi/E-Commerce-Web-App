@@ -1,7 +1,3 @@
--- Add users
-INSERT INTO Users (user_email, first_name, last_name, user_password) VALUES
-('admin@gmail.com', 'Main', 'Admin', 'Admin1234&');
-
 -- Add departments
 INSERT INTO departments (department_id, department_name) VALUES
 (1, 'Writing Supplies & Tools'),

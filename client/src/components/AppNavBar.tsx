@@ -32,9 +32,9 @@ const ProfileButton: FC<Props> = (props: Props) => {
    return (
       <Popover minimal content={dropdownMenu} placement="bottom">
          <Button 
-                  className="bp5-minimal"
-                  text={`Hello, ${props.state.user?.first_name} ${props.state.user?.last_name}`}
-               />
+            className="bp5-minimal"
+            text={`Hello, ${props.state.user?.first_name} ${props.state.user?.last_name}`}
+         />
       </Popover>
    );
 }
@@ -65,11 +65,11 @@ const AppNavBar: FC<Props> = (props: Props) => {
          <Navbar.Group align={Alignment.RIGHT}>
             { props.state.user === null ?
                <Button
-               className="bp5-minimal"
-               icon="user"
-               text="Sign In"
-               loading={props.state.loading}
-               onClick={handleSignInClick} />
+                  className="bp5-minimal"
+                  icon="user"
+                  text="Sign In"
+                  loading={props.state.loading}
+                  onClick={handleSignInClick} />
                :
                <ProfileButton state={props.state} logOutUser={props.logOutUser} />
             }

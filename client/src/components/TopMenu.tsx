@@ -4,7 +4,7 @@
 
 import { FC, useEffect, useState } from 'react';
 import '../styles/App.css';
-import { AppState, Category, Department, Page } from '../utils/dataTypes';
+import { AppState, Category, Department } from '../utils/dataTypes';
 import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { getAllDepartments, getCategoriesInDepartment } from '../utils/dataService';
 import { useNavigate } from 'react-router-dom';
@@ -42,8 +42,7 @@ const DepartmentDropDownMenu: FC<DepartmentProps> = (props: DepartmentProps) => 
    return (
       <Popover minimal content={dropdownMenu} placement="bottom">
             <Button
-               minimal
-               small
+               className="bp5-minimal bp5-small"
                alignText="left"
                rightIcon="caret-down"
                text={props.department.department_name} />

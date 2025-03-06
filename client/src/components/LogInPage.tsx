@@ -1,12 +1,12 @@
 /**
- * The log in page for the website
+ * The log in page
  */
 
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import { FC, useRef, useState } from "react";
-import { AppState, Page, User } from "../utils/dataTypes";
+import { AppState, User } from "../utils/dataTypes";
 import { getUser } from "../utils/dataService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Props {
    state: AppState;
@@ -39,10 +39,8 @@ const LogInPage: FC<Props> = (props: Props) => {
    const emailRef = useRef<HTMLInputElement>(null);
    const passwordRef = useRef<HTMLInputElement>(null);
 
-   const handleLockClick = () => {
-      setState({ ...state, showPassword: !state.showPassword });
-   }
-
+   // Returns true if the form has enough information to validate the login
+   // credentials and false otherwise
    const validateLogInForm = (email: string) : boolean => {
       if (email.length === 0) {
          const emailHelptext = "Enter your email";
@@ -56,6 +54,7 @@ const LogInPage: FC<Props> = (props: Props) => {
       return true;
    }
 
+   // Validates the login credentials entered
    const validateLogInCredentials = async (email: string, password: string) => {
       let user : User | null = null;
       await getUser(email)
@@ -101,23 +100,28 @@ const LogInPage: FC<Props> = (props: Props) => {
       }
    }
 
+   // Shows or hides the password when the lock button is clicked
+   const handleLockClick = () => {
+      setState({ ...state, showPassword: !state.showPassword });
+   }
+
    const lockButton =
       <Button
-         minimal
+         className="bp5-minimal"
          icon={state.showPassword ? "unlock" : "lock"}
          onClick={handleLockClick}
       />;
 
    return (
-      <div className="Login-form">
-         <div className="Login-form-header">
+      <div className="User-form">
+         <div className="User-form-header">
             Log In
          </div>
          <FormGroup
             helperText={state.emailHelptext}
             intent={state.emailValid ? "none" : "danger"}>
             <InputGroup
-               className="Login-input"
+               className="User-form-input"
                type="text"
                placeholder="Email"
                intent={state.emailValid ? "none" : "danger"}
@@ -127,7 +131,7 @@ const LogInPage: FC<Props> = (props: Props) => {
             helperText={state.passwordHelptext}
             intent={state.passwordValid ? "none" : "danger"}>
             <InputGroup
-               className="Login-input"
+               className="User-form-input"
                placeholder="Password"
                rightElement={lockButton}
                type={state.showPassword ? "text" : "password"}
@@ -135,12 +139,15 @@ const LogInPage: FC<Props> = (props: Props) => {
                inputRef={passwordRef} />
          </FormGroup>
          <Button
-            className="Login-btn"
+            className="User-form-btn"
             text="Continue"
             intent="primary"
             rightIcon="arrow-right"
             loading={state.loading}
             onClick={handleLogInClick} />
+         <div className="Create-user-link">
+            New here? <Link to="/signup">Create an account</Link>
+         </div>
       </div>
    );
 }

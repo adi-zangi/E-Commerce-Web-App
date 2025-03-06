@@ -4,7 +4,7 @@
  */
 
 import { FC, useEffect, useRef, useState } from "react";
-import { AppState, Page, Product } from "../utils/dataTypes";
+import { AppState, Product } from "../utils/dataTypes";
 import SearchResultsGridView from "./SearchResultsGridView";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";

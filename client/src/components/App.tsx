@@ -13,6 +13,7 @@ import LogInPage from './LogInPage';
 import { getIdToCategoryMap } from '../utils/dataUtils';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import NoPage from './NoPage';
+import CreateUserPage from './CreateUserPage';
 
 /**
  * Returns the value of a page from the Page enum that matches the given pathname
@@ -92,6 +93,10 @@ const App: FC = () => {
             />
             <Route path="/login" element={
                <LogInPage state={state} setUser={setUser} />
+               }
+            />
+            <Route path="/signup" element={
+               <CreateUserPage state={state} />
                }
             />
             <Route path="/results/all?/search?/:query?/category?/:category?" element={

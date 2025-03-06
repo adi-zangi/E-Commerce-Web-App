@@ -18,6 +18,17 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Add a user
+app.post('/users/create', (req, res) => {
+   db.addUser(req.body.email, req.body.first_name, req.body.last_name, req.body.password)
+   .then(val => {
+      res.status(200).send(val[0]);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get a user by email
 app.get('/users/:email', (req, res) => {
    db.getUser(req.params.email)

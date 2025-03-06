@@ -14,12 +14,33 @@ const pool = new Pool ({
 });
 
 /**
+ * Inserts a new user
+ * @param {string} email The new user's email
+ * @param {string} firstName The new user's first name
+ * @param {string} lastName The new user's last name
+ * @param {string} password The new user's password
+ * @returns 
+ */
+const addUser = (email, firstName, lastName, password) => {
+   return new Promise((resolve, reject) => {
+      pool.query(`INSERT INTO Users (user_email, first_name, last_name, user_password) 
+            VALUES($1, $2, $3, $4) RETURNING *`, [email, firstName, lastName, password], (error, results) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(results.rows);
+         }
+      });
+   });
+}
+
+/**
  * Gets a user
  * @param {string} email The user's email
  */
 const getUser = (email) => {
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Users WHERE user_email='${email}'`, (error, results) => {
+      pool.query(`SELECT * FROM Users WHERE user_email=$1`, [email], (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -54,8 +75,8 @@ const getAllProducts = () => {
 const getProductsByQuery = (searchQuery) => {
    return new Promise((resolve, reject) => {
       searchQuery = searchQuery.toLowerCase();
-      const categoryCondition = `category_id IN ` +
-         `(SELECT category_id FROM Categories WHERE '${searchQuery}' LIKE CONCAT('%', LOWER(category_keyword), '%'))`;
+      const categoryCondition = `category_id IN
+         (SELECT category_id FROM Categories WHERE '${searchQuery}' LIKE CONCAT('%', LOWER(category_keyword), '%'))`;
       const searchWords = searchQuery.split(/\s/);
       const conditionsList = searchWords.map(word => {
          return `LOWER(product_name) LIKE '%${word}%'`
@@ -73,11 +94,11 @@ const getProductsByQuery = (searchQuery) => {
 
 /**
  * Gets the store products with a category
- * @param {number} category_id The category id
+ * @param {number} categoryId The category id
  */
-const getProductsByCategory = (category_id) => {
+const getProductsByCategory = (categoryId) => {
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Products WHERE category_id=${category_id}`, (error, results) => {
+      pool.query(`SELECT * FROM Products WHERE category_id=$1`, [categoryId], (error, results) => {
          if (error) {
             reject(error);
          }
@@ -118,11 +139,11 @@ const getAllDepartments = () => {
 
 /**
  * Gets all the product categories in a department
- * @param {number} department_id The department id
+ * @param {number} departmentId The department id
  */
-const getCategoriesInDepartment = (department_id) => {
+const getCategoriesInDepartment = (departmentId) => {
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Categories WHERE department_id=${department_id}`, (error, results) => {
+      pool.query(`SELECT * FROM Categories WHERE department_id=$1`, [departmentId], (error, results) => {
          if (error) {
             reject(error);
          }
@@ -132,6 +153,7 @@ const getCategoriesInDepartment = (department_id) => {
 }
 
 module.exports = {
+   addUser,
    getUser,
    getAllProducts,
    getProductsByQuery,

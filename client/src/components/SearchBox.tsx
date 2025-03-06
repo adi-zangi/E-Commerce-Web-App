@@ -5,7 +5,7 @@
 import { FC, useEffect } from 'react';
 import { Button, InputGroup } from '@blueprintjs/core';
 import { useRef } from 'react';
-import { AppState, Page } from '../utils/dataTypes';
+import { AppState } from '../utils/dataTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Props {
@@ -47,8 +47,7 @@ const SearchBox: FC<Props> = (props: Props) => {
    return (
       <div className="Search-bar">
          <InputGroup
-            large
-            className="Navbar-search Search-input"
+            className="Navbar-search Search-input bp5-large"
             type="search"
             placeholder="Search Products"
             inputRef={searchBox} />

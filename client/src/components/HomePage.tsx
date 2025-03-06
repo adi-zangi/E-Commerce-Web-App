@@ -5,7 +5,7 @@
 import { FC } from 'react';
 import logo from '../logos/logo.svg';
 import '../styles/App.css';
-import { AppState, Page } from '../utils/dataTypes';
+import { AppState } from '../utils/dataTypes';
 
 interface Props {
    state: AppState;

@@ -4,7 +4,7 @@
  */
 
 import { FC, useEffect, useState } from 'react';
-import { AppState, Page, Product } from '../utils/dataTypes';
+import { AppState, Product } from '../utils/dataTypes';
 import GridItem, { gridItemStyle } from './GridItem';
 import { styleVars } from './SearchResults';
 
