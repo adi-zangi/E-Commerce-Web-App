@@ -69,33 +69,26 @@ yarn start
 
 ## Features
 
-* [Log in](#log-in)
+* [Create a user and log in](#create-user-and-log-in)
 * [Search for products](#search-for-products)
-* [View products by department and category](#view-products-by-department-and-category)
+* [View products for a department and category](#view-products-for-a-department-and-category)
 * [A screen that adjusts when window size changes](#a-screen-that-adjusts-when-window-size-changes)
 * [Working forward, back, and refresh buttons](#working-forward-and-back-buttons)
 
-### Log in
-Click "Sign In" to get to the log in page. Currently there is only one user with the email `admin@gmail.com` and password `Admin1234&`.
+### Create user and log in
 
-<img width="1280" alt="log_in_page" src="https://github.com/user-attachments/assets/7ac536d9-61b5-4e86-9963-bf4f9e8816f7" />
-
-<br />
-
-When a user is logged in, the Sign In button is replaced with the name of the user.
-
-<img width="1280" alt="headbar_when_logged_in" src="https://github.com/user-attachments/assets/aaea7730-bb36-4362-873d-34722b117721" />
+![log_in_example](https://github.com/user-attachments/assets/b29e92c9-6e43-4f0f-8b1a-72c651c47859)
 
 ### Search for products
 <p>
-Search for products by typing keywords into the search bar and clicking on the search button. An empty search shows all the products in the store.
+The search bar can be used to search the store. An empty search shows all the products in the store.
 </p>
 
 <p>
-Relevant results show first.
+Results are sorted by relevance.
 </p>
 
-<img width="1280" alt="example_search" src="https://github.com/user-attachments/assets/36c03997-c6e3-40d1-9687-07a9a1e5730f" />
+![example_search](https://github.com/user-attachments/assets/237ce89b-91fe-47a3-8c6e-2c31d962a10b)
 
 #### Navigate between pages
 Use the page forward and back buttons or type in a page number and then click one of the arrow buttons.
@@ -115,6 +108,5 @@ Use the top menu to select a product department and category.
 
 ## Not implemented yet
 * Select how to sort search results
-* Create user
 * Add items to cart
 * Checkout
