@@ -1,3 +1,6 @@
 # debugger
 .vscode
 launch.json
+
+# misc
+.DS_Store

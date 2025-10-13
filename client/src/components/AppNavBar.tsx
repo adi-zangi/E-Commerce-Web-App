@@ -59,12 +59,14 @@ const AppNavBar: FC<Props> = (props: Props) => {
       <Navbar>
          <Navbar.Group align={Alignment.LEFT}>
             <Button
+               id="logoBtn"
                className="Logo-btn bp5-large"
                onClick={handleLogoClick} />
          </Navbar.Group>
          <Navbar.Group align={Alignment.RIGHT}>
             { props.state.user === null ?
                <Button
+                  id="logInBtn"
                   className="bp5-minimal"
                   icon="user"
                   text="Sign In"

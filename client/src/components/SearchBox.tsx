@@ -47,11 +47,13 @@ const SearchBox: FC<Props> = (props: Props) => {
    return (
       <div className="Search-bar">
          <InputGroup
+            id="searchInput"
             className="Navbar-search Search-input bp5-large"
             type="search"
             placeholder="Search Products"
             inputRef={searchBox} />
          <Button
+            id="searchBtn"
             className="bp5-minimal"
             icon="search"
             onClick={handleSearchClick} />
