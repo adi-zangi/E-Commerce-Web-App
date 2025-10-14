@@ -3,7 +3,7 @@ A web application for an online store called AZ Shop.
 
 <br />
 
-<img width="1280" alt="homepage" src="https://github.com/user-attachments/assets/94b6eb38-1640-4637-90a2-d6a9016e23bd" />
+<img src="/assets/homepage.png?raw=true" width="1280" />
 
 ## Table of contents
 * [Prerequisites](#Prerequisites)
@@ -71,42 +71,31 @@ yarn start
 
 * [Create a user and log in](#create-user-and-log-in)
 * [Search for products](#search-for-products)
-* [View products for a department and category](#view-products-for-a-department-and-category)
-* [A screen that adjusts when window size changes](#a-screen-that-adjusts-when-window-size-changes)
-* [Working forward, back, and refresh buttons](#working-forward-and-back-buttons)
+* [View products by department and category](#view-products-by-department-and-category)
+* [More Features](#more-features)
 
 ### Create user and log in
 
-![log_in_example](https://github.com/user-attachments/assets/b29e92c9-6e43-4f0f-8b1a-72c651c47859)
+![log_in_example](/assets/log_in_example.gif)
 
 ### Search for products
-<p>
-The search bar can be used to search the store. An empty search shows all the products in the store.
-</p>
+The search bar can be used to search the store. Results are sorted by relevance.
 
-<p>
-Results are sorted by relevance.
-</p>
-
-![example_search](https://github.com/user-attachments/assets/237ce89b-91fe-47a3-8c6e-2c31d962a10b)
-
-#### Navigate between pages
-Use the page forward and back buttons or type in a page number and then click one of the arrow buttons.
-
-![search_example](https://github.com/user-attachments/assets/c98c040f-45d2-40b6-919a-594d232b5c01)
+![search_examples](/assets/search_examples.gif)
 
 ### View products by department and category
-Use the top menu to select a product department and category.
+Use the top menu to select a department and category.
 
-![departments_menu](https://github.com/user-attachments/assets/d0fd16f0-e811-463c-9a87-0bdefe722d41)
+![search_by_categories](/assets/search_by_categories.gif)
 
-### A screen that adjusts when window size changes
+### More Features
+* Working forward and backward navigation
+* A screen that adjusts when the window size changes
 
-![screen_adjusting](https://github.com/user-attachments/assets/2cbd394e-cbd2-419a-b8d3-ae6b34ef0f7b)
-
-### Working forward and back buttons
+![more_features](/assets/forward_backward_buttons_and_screen_adjustment.gif)
 
 ## Not implemented yet
 * Select how to sort search results
+* Autocomplete search bar
 * Add items to cart
 * Checkout
