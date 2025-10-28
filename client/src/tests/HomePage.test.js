@@ -8,11 +8,12 @@ import env from '../env.json';
 const clientPort = env.CLIENT_PORT || 3000;
 const appUrl = `http://localhost:${clientPort}`;
 
-describe('App Home Page Tests', () => {
+describe('Home Page Tests', () => {
    let driver;
 
    beforeAll(async () => {
       driver = await new Builder().forBrowser(Browser.CHROME).build();
+      await driver.manage().setTimeouts({implicit: 500});
    });
 
    afterAll(async () => {

@@ -13,17 +13,23 @@ describe('Search Box Tests', () => {
 
    beforeAll(async () => {
       driver = await new Builder().forBrowser(Browser.CHROME).build();
+      await driver.manage().setTimeouts({implicit: 500});
    });
 
    afterAll(async () => {
       await driver.quit();
    });
 
-   it('navigates to the homepage and verifies the search box is present', async () => {
+   it('navigates to the homepage and verifies a search can be made using the search box', async () => {
       await driver.get(appUrl);
-      let searchInputArray = await driver.findElements(By.id('searchInput'));
-      expect(searchInputArray).toHaveLength(1);
-      let searchButtonArray = await driver.findElements(By.id('searchBtn'));
-      expect(searchButtonArray).toHaveLength(1);
+
+      let searchInput = await driver.findElement(By.id('searchInput'));
+      let searchButton= await driver.findElement(By.id('searchBtn'));
+
+      // Clicking on the search button navigates to search results for the search input
+      await searchInput.sendKeys('blue pens');
+      await searchButton.click();
+      let url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/results/search/?q=blue+pens`);
    });
 });

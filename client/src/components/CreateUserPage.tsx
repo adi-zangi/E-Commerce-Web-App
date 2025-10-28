@@ -146,10 +146,12 @@ const CreateUserPage: FC<Props> = (props: Props) => {
             Create Account
          </div>
          <FormGroup
+            id="signupEmailField"
             className="User-form-input"
             helperText={state.emailHelptext}
             intent={state.emailValid ? "none" : "danger"}>
             <InputGroup
+               id="signupEmailInput"
                type="text"
                placeholder="Email"
                intent={state.emailValid ? "none" : "danger"}
@@ -157,10 +159,12 @@ const CreateUserPage: FC<Props> = (props: Props) => {
                data-lpignore="true" />
          </FormGroup>
          <FormGroup
+            id="signupFirstNameField"
             className="User-form-input"
             helperText={state.firstNameHelptext}
             intent={state.firstNameValid ? "none" : "danger"}>
             <InputGroup
+               id="signupFirstNameInput"
                type="text"
                placeholder="First name"
                intent={state.firstNameValid ? "none" : "danger"}
@@ -168,10 +172,12 @@ const CreateUserPage: FC<Props> = (props: Props) => {
                data-lpignore="true" />
          </FormGroup>
          <FormGroup
+            id="signupLastNameField"
             className="User-form-input"
             helperText={state.lastNameHelptext}
             intent={state.lastNameValid ? "none" : "danger"}>
             <InputGroup
+               id="signupLastNameInput"
                type="text"
                placeholder="Last name"
                intent={state.lastNameValid ? "none" : "danger"}
@@ -179,10 +185,12 @@ const CreateUserPage: FC<Props> = (props: Props) => {
                data-lpignore="true" />
          </FormGroup>
          <FormGroup
+            id="signupPassField"
             className="User-form-input"
             helperText={state.passwordHelptext}
             intent={state.passwordValid ? "none" : "danger"}>
             <InputGroup
+               id="signupPassInput"
                placeholder="Password"
                rightElement={lockButton}
                type={state.showPassword ? "text" : "password"}
@@ -191,6 +199,7 @@ const CreateUserPage: FC<Props> = (props: Props) => {
                data-lpignore="true" />
          </FormGroup>
          <Button
+            id="submitCreateUserBtn"
             className="User-form-btn"
             text="Continue"
             intent="primary"

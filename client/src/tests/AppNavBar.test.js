@@ -13,6 +13,7 @@ describe('App Navigation Bar Tests', () => {
 
    beforeAll(async () => {
       driver = await new Builder().forBrowser(Browser.CHROME).build();
+      await driver.manage().setTimeouts({implicit: 500});
    });
 
    afterAll(async () => {
@@ -21,9 +22,7 @@ describe('App Navigation Bar Tests', () => {
 
    it('verifies the app logo button navigates to the homepage', async () => {
       await driver.get(appUrl);
-      let logoButtonArray = await driver.findElements(By.id('logoBtn'));
-      expect(logoButtonArray).toHaveLength(1);
-      let logoButton = logoButtonArray[0];
+      let logoButton = await driver.findElement(By.id('logoBtn'));
       await logoButton.click();
       let url = await driver.getCurrentUrl();
       expect(url).toBe(`${appUrl}/`);
@@ -31,9 +30,7 @@ describe('App Navigation Bar Tests', () => {
 
    it('verifies the sign in button navigates to the sign in page', async () => {
       await driver.get(appUrl);
-      let logInButtonArray = await driver.findElements(By.id('logInBtn'));
-      expect(logInButtonArray).toHaveLength(1);
-      let logInButton = logInButtonArray[0];
+      let logInButton = await driver.findElement(By.id('logInBtn'));
       await logInButton.click();
       let url = await driver.getCurrentUrl();
       expect(url).toBe(`${appUrl}/login`);

@@ -118,9 +118,11 @@ const LogInPage: FC<Props> = (props: Props) => {
             Log In
          </div>
          <FormGroup
+            id="loginEmailField"
             helperText={state.emailHelptext}
             intent={state.emailValid ? "none" : "danger"}>
             <InputGroup
+               id="loginEmailInput"
                className="User-form-input"
                type="text"
                placeholder="Email"
@@ -128,9 +130,11 @@ const LogInPage: FC<Props> = (props: Props) => {
                inputRef={emailRef} />
          </FormGroup>
          <FormGroup
+            id="loginPassField"
             helperText={state.passwordHelptext}
             intent={state.passwordValid ? "none" : "danger"}>
             <InputGroup
+               id="loginPassInput"
                className="User-form-input"
                placeholder="Password"
                rightElement={lockButton}
@@ -139,6 +143,7 @@ const LogInPage: FC<Props> = (props: Props) => {
                inputRef={passwordRef} />
          </FormGroup>
          <Button
+            id="submitLogInBtn"
             className="User-form-btn"
             text="Continue"
             intent="primary"
