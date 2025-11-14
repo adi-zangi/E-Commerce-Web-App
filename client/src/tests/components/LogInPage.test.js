@@ -3,7 +3,7 @@
  */
 
 import { Builder, Browser, By } from 'selenium-webdriver';
-import env from '../env.json';
+import env from '../../env.json';
 
 const clientPort = env.CLIENT_PORT || 3000;
 const appUrl = `http://localhost:${clientPort}`;
