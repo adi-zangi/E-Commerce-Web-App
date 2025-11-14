@@ -2,19 +2,19 @@
  * Tests the SearchBox component
  */
 
-import { Builder, Browser, By } from 'selenium-webdriver';
+import { Builder, Browser, By, WebDriver } from 'selenium-webdriver';
 import env from '../../env.json';
 
 const clientPort = env.CLIENT_PORT || 3000;
 const appUrl = `http://localhost:${clientPort}`;
 
 describe('Search Box Tests', () => {
-   let driver;
+   let driver : WebDriver;
 
    beforeAll(async () => {
       driver = await new Builder().forBrowser(Browser.CHROME).build();
       await driver.manage().setTimeouts({implicit: 500});
-   });
+   }, 10000);
 
    afterAll(async () => {
       await driver.quit();

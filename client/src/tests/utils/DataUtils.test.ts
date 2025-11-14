@@ -2,10 +2,11 @@
  * Tests the functions in dataUtils.ts
  */
 
+import { Product } from '../../utils/dataTypes';
 import { getIdToCategoryMap, sortProductsByRelevance } from '../../utils/dataUtils';
 
 describe('Data Utility Tests', () => {
-   let idToCategoryMap;
+   let idToCategoryMap : Map<number, string>;
 
    beforeAll(async () => {
          idToCategoryMap = await getIdToCategoryMap();
@@ -27,7 +28,7 @@ describe('Data Utility Tests', () => {
    });
 
    it("verifies sortProductsByRelevance with an empty array returns an empty array", async () => {
-      let products = [];
+      let products : Product[] = [];
       let query = "blabla";
       let sorted = sortProductsByRelevance(products, query, idToCategoryMap);
       expect(sorted).toEqual([]);
