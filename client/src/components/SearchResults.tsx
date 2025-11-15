@@ -154,6 +154,12 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
       }
    }
 
+   const handleKeyDown = (event : React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+         handlePageInputChange();
+      }
+   }
+
    const handlePageInputChange = () => {
       if (pageInputField.current) {
          const pageInput = Number(pageInputField.current.value);
@@ -179,6 +185,7 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
             buttonPosition="none"
             selectAllOnFocus
             defaultValue={props.selectedPage}
+            onKeyDown={handleKeyDown}
          />
          {"of " + props.numberOfPages}
          <Button
