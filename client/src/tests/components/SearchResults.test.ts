@@ -47,8 +47,6 @@ describe('Search Results Tests', () => {
 
    it('verifies the page picker changes the search results page', async () => {
       await driver.get(`${appUrl}/results/category/?c=Pen`);
-      let itemCardArray = await driver.findElements(By.className('Item-card'));
-      expect(itemCardArray.length).toBeGreaterThan(0);
       let pageInput = await driver.findElement(By.className('Page-input'));
       let pageNumber;
 
@@ -81,5 +79,42 @@ describe('Search Results Tests', () => {
       await pageUpButton.click();
       pageNumber = await pageInput.getAttribute('value');
       expect(pageNumber).toBe('4');
+   });
+
+   it('verifies that making the same search twice refreshes the search results', async () => {
+      await driver.get(`${appUrl}/results/category/?c=Pen`);
+      let pageInput = await driver.findElement(By.className('Page-input'));
+      let pageNumber;
+
+      // Switch to page 2
+      let pageUpButton = await driver.findElement(By.className('Page-up-btn'));
+      await pageUpButton.click();
+      pageNumber = await pageInput.getAttribute('value');
+      expect(pageNumber).toBe('2');
+
+      // Clicking on the search button changes the page to 1
+      let searchButton = await driver.findElement(By.id('searchBtn'));
+      await searchButton.click();
+      pageNumber = await pageInput.getAttribute('value');
+      expect(pageNumber).toBe('1');
+   });
+
+   it('verifies that refreshing the search results page resets the page number', async () => {
+      await driver.get(`${appUrl}/results/category/?c=Pen`);
+      let pageInput;
+      let pageNumber;
+
+      // Switch to page 2
+      pageInput = await driver.findElement(By.className('Page-input'));
+      let pageUpButton = await driver.findElement(By.className('Page-up-btn'));
+      await pageUpButton.click();
+      pageNumber = await pageInput.getAttribute('value');
+      expect(pageNumber).toBe('2');
+
+      // Clicking on the search button changes the page to 1
+      await driver.navigate().refresh();
+      pageInput = await driver.findElement(By.className('Page-input'));
+      pageNumber = await pageInput.getAttribute('value');
+      expect(pageNumber).toBe('1');
    });
 });

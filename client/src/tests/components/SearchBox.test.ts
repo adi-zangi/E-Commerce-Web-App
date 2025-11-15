@@ -24,7 +24,7 @@ describe('Search Box Tests', () => {
       await driver.get(appUrl);
 
       let searchInput = await driver.findElement(By.id('searchInput'));
-      let searchButton= await driver.findElement(By.id('searchBtn'));
+      let searchButton = await driver.findElement(By.id('searchBtn'));
 
       // Clicking on the search button navigates to search results for the search input
       await searchInput.sendKeys('blue pens');

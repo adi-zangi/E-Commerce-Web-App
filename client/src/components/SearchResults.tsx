@@ -10,7 +10,7 @@ import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
 import { sortProductsByRelevance } from "../utils/dataUtils";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 interface Props {
    state: AppState;
@@ -208,6 +208,7 @@ const SearchResults: FC<Props> = (props: Props) => {
    });
 
    const [searchParams] = useSearchParams();
+   const location = useLocation();
 
    useEffect(() => {
       const initializeData = async () => {
@@ -235,7 +236,7 @@ const SearchResults: FC<Props> = (props: Props) => {
          })
       }
       initializeData();
-   }, [searchParams, props.state.idToCategoryMap]);
+   }, [location, searchParams, props.state.idToCategoryMap]);
 
    const setPage = (page: number) => {
       setState({
