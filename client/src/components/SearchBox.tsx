@@ -19,6 +19,7 @@ const SearchBox: FC<Props> = (props: Props) => {
    const [searchParams] = useSearchParams();
 
    const searchBox = useRef<HTMLInputElement>(null);
+   const searchButton = useRef<HTMLButtonElement>(null);
 
    const handleSearchClick = () => {
       const query = searchBox.current?.value;
@@ -27,6 +28,15 @@ const SearchBox: FC<Props> = (props: Props) => {
             navigate("/results/search/?q=" + query.replaceAll(/\s/g, "+"));
          } else {
             navigate("/results/all");
+         }
+      }
+   }
+
+   const handleKeyDown = (event : React.KeyboardEvent<HTMLInputElement>) => {
+      if (searchButton.current) {
+         if (event.key === 'Enter') {
+            searchButton.current.focus();
+            searchButton.current.click();
          }
       }
    }
@@ -51,11 +61,13 @@ const SearchBox: FC<Props> = (props: Props) => {
             className="Navbar-search Search-input bp5-large"
             type="search"
             placeholder="Search Products"
-            inputRef={searchBox} />
+            inputRef={searchBox}
+            onKeyDown={handleKeyDown} />
          <Button
             id="searchBtn"
             className="bp5-minimal"
             icon="search"
+            ref={searchButton}
             onClick={handleSearchClick} />
       </div>
    );

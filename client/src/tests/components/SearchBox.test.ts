@@ -2,7 +2,7 @@
  * Tests the SearchBox component
  */
 
-import { Builder, Browser, By, WebDriver } from 'selenium-webdriver';
+import { Builder, Browser, By, WebDriver, Key } from 'selenium-webdriver';
 import env from '../../env.json';
 
 const clientPort = env.CLIENT_PORT || 3000;
@@ -20,7 +20,7 @@ describe('Search Box Tests', () => {
       await driver.quit();
    });
 
-   it('navigates to the homepage and verifies a search can be made using the search box', async () => {
+   it('verifies that a search can be made by clicking on the search button', async () => {
       await driver.get(appUrl);
 
       let searchInput = await driver.findElement(By.id('searchInput'));
@@ -29,6 +29,18 @@ describe('Search Box Tests', () => {
       // Clicking on the search button navigates to search results for the search input
       await searchInput.sendKeys('blue pens');
       await searchButton.click();
+      let url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/results/search/?q=blue+pens`);
+   });
+
+   it('verifies that a search can be made by pressing the enter key', async () => {
+      await driver.get(appUrl);
+
+      let searchInput = await driver.findElement(By.id('searchInput'));
+
+      // Pressing 'enter' navigates to search results for the search input
+      await searchInput.sendKeys('blue pens');
+      await searchInput.sendKeys(Key.ENTER);
       let url = await driver.getCurrentUrl();
       expect(url).toBe(`${appUrl}/results/search/?q=blue+pens`);
    });
