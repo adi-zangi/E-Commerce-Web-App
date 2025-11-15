@@ -63,7 +63,7 @@ const TopMenu: FC<Props> = (props: Props) => {
       const getData = async () => {
          await getAllDepartments()
          .then((res: any) => {
-            setState({ ...state, departments: res.data });
+            setState(prevState => ({ ...prevState, departments: res.data }));
          })
          .catch((e: Error) => {
             console.log(e);
@@ -86,7 +86,7 @@ const TopMenu: FC<Props> = (props: Props) => {
                });
          }
          if (categories.length > 0) {
-            setState({ ...state, categories: categories });
+            setState(prevState => ({ ...prevState, categories: categories }));
          }
       }
       getData();

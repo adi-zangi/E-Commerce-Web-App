@@ -28,7 +28,7 @@ describe('App Component Tests', () => {
 
    it('navigates to an unknown route and verifies an error page shows', async () => {
       await driver.get(`${appUrl}/bla`);
-      let header = await driver.findElement(By.tagName('h1'));
+      let header = await driver.findElement(By.css('h1'));
       let headerText = await header.getText();
       expect(headerText).toBe('404');
    });

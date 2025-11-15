@@ -23,7 +23,7 @@ describe('Log In Page Tests', () => {
    it('verifies the create account button navigates to the sign up page', async () => {
       await driver.get(`${appUrl}/login`);
       let createUserDiv = await driver.findElement(By.className('Create-user-link'));
-      let createUserLink = await createUserDiv.findElement(By.tagName('a'));
+      let createUserLink = await createUserDiv.findElement(By.css('a'));
       await createUserLink.click();
       let url = await driver.getCurrentUrl();
       expect(url).toBe(`${appUrl}/signup`);

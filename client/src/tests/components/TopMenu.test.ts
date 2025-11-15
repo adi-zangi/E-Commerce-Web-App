@@ -26,14 +26,14 @@ describe('Top Menu Tests', () => {
       let topMenu = await driver.findElement(By.className('Top-menu'));
 
       // Department buttons are present
-      let departmentButtonArray = await topMenu.findElements(By.tagName('button'));
+      let departmentButtonArray = await topMenu.findElements(By.css('button'));
       expect(departmentButtonArray.length).toBeGreaterThan(0);
 
       // First department button opens a category menu
       let firstDeptButton = departmentButtonArray[0];
       await firstDeptButton.click();
-      let firstDeptMenu = await driver.findElement(By.tagName('ul'));
-      let categoriesArray = await firstDeptMenu.findElements(By.tagName('li'));
+      let firstDeptMenu = await driver.findElement(By.css('ul'));
+      let categoriesArray = await firstDeptMenu.findElements(By.css('li'));
       expect(categoriesArray.length).toBeGreaterThan(0);
 
       // Clicking on the first category navigates to search results for the category

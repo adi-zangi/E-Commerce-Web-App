@@ -57,17 +57,18 @@ const App: FC = () => {
          });
       }
       initState();
+      // eslint-disable-next-line
    }, []);
 
    // Updates the current page type whenever the URL changes
    useEffect(() => {
       if (!state.loading) {
-         setState({
-            ...state,
+         setState(prevState => ({
+            ...prevState,
             page: getPageFromPath(location.pathname),
-         });
+         }));
       }
-   }, [location]);
+   }, [state.loading, location.pathname]);
 
    const setUser = (user: User) => {
       localStorage.setItem("user", JSON.stringify(user));
