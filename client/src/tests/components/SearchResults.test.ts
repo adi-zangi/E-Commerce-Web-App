@@ -29,20 +29,38 @@ describe('Search Results Tests', () => {
 
    it('navigates to the search results for a search query and verifies the results are present', async () => {
       await driver.get(`${appUrl}/results/search/?q=blue+pens`);
+
+      // Search results are present
       let itemCardArray = await driver.findElements(By.className('Item-card'));
       expect(itemCardArray.length).toBeGreaterThan(0);
+
+      // Page 1 is selected
       let pageInput = await driver.findElement(By.className('Page-input'));
       let pageNumber = await pageInput.getAttribute('value');
       expect(pageNumber).toBe('1');
+
+      // The search box contains the search query
+      let searchInput = await driver.findElement(By.id('searchInput'));
+      let inputValue = await searchInput.getAttribute('value');
+      expect(inputValue).toBe('blue pens');
    });
 
    it('navigates to the search results for a category and verifies the results are present', async () => {
       await driver.get(`${appUrl}/results/category/?c=Pencils`);
+
+      // Search results are present
       let itemCardArray = await driver.findElements(By.className('Item-card'));
       expect(itemCardArray.length).toBeGreaterThan(0);
+
+      // Page 1 is selected
       let pageInput = await driver.findElement(By.className('Page-input'));
       let pageNumber = await pageInput.getAttribute('value');
       expect(pageNumber).toBe('1');
+
+      // The search box is empty
+      let searchInput = await driver.findElement(By.id('searchInput'));
+      let inputValue = await searchInput.getAttribute('value');
+      expect(inputValue).toBe('');
    });
 
    it('verifies the page picker changes the search results page', async () => {

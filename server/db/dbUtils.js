@@ -152,6 +152,22 @@ const getCategoriesInDepartment = (departmentId) => {
    });
 }
 
+/**
+ * Gets an array of autocomplete search suggestions for a given text
+ * @param {string} text The text to get autocomplete suggestions for
+ */
+const getAutocompleteSearchList = (text) => {
+   lowerText = text.toLowerCase();
+   return new Promise((resolve, reject) => {
+      pool.query(`SELECT category_name FROM Categories WHERE LOWER(category_name) LIKE '${lowerText}%'`, (error, results) => {
+         if (error) {
+            reject(error);
+         }
+         resolve(results.rows);
+      });
+   });
+}
+
 module.exports = {
    addUser,
    getUser,
@@ -160,5 +176,6 @@ module.exports = {
    getProductsByCategory,
    getAllCategories,
    getAllDepartments,
-   getCategoriesInDepartment
+   getCategoriesInDepartment,
+   getAutocompleteSearchList
 };

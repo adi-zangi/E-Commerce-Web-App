@@ -20,7 +20,7 @@ describe('Search Box Tests', () => {
       await driver.quit();
    });
 
-   it('verifies that a search can be made by clicking on the search button', async () => {
+   it('verifies that clicking on the search button makes a search', async () => {
       await driver.get(appUrl);
 
       let searchInput = await driver.findElement(By.id('searchInput'));
@@ -33,7 +33,7 @@ describe('Search Box Tests', () => {
       expect(url).toBe(`${appUrl}/results/search/?q=blue+pens`);
    });
 
-   it('verifies that a search can be made by pressing the enter key', async () => {
+   it('verifies that pressing the enter key in the search box makes a search', async () => {
       await driver.get(appUrl);
 
       let searchInput = await driver.findElement(By.id('searchInput'));

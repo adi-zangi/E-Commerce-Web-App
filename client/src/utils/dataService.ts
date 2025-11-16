@@ -85,5 +85,15 @@ const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
    return axios.get(`/department/${departmentId}/categories`)
 }
 
+/**
+ * Gets an array of autocomplete search suggestions for the given text
+ * @param text The text to get autocomplete suggestions for
+ * @returns A promise on an array of categories, where the category names are the suggestions
+ */
+const getAutocompleteSearchList = (text: string) : PromiseResponse => {
+   return axios.get(`/autocomplete_search_suggestions/${text}`);
+}
+
 export {addUser, getUser, getAllProducts, searchForProducts, getAllCategories,
-         getAllDepartments, getCategoriesInDepartment, getProductsByCategory};
+         getAllDepartments, getCategoriesInDepartment, getProductsByCategory,
+         getAutocompleteSearchList};

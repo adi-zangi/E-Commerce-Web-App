@@ -106,6 +106,17 @@ app.get('/department/:department_id/categories', (req, res) => {
    })
 });
 
+// Get autocomplete search suggestions for a given text
+app.get('/autocomplete_search_suggestions/:text', (req, res) => {
+   db.getAutocompleteSearchList(req.params.text)
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 app.listen(serverPort, () => {
    console.log(`Listening on port ${serverPort}`)
 });
