@@ -18,13 +18,33 @@ const pool = new Pool ({
  * @param {string} email The new user's email
  * @param {string} firstName The new user's first name
  * @param {string} lastName The new user's last name
- * @param {string} password The new user's password
- * @returns 
+ * @param {string} password The new user's password 
  */
 const addUser = (email, firstName, lastName, password) => {
    return new Promise((resolve, reject) => {
       pool.query(`INSERT INTO Users (user_email, first_name, last_name, user_password) 
             VALUES($1, $2, $3, $4) RETURNING *`, [email, firstName, lastName, password], (error, results) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(results.rows);
+         }
+      });
+   });
+}
+
+/**
+ * Updates the search history table with a given search query
+ * If the query is in the table, increments the frequency column by 1
+ * Otherwise, adds the query to the table with a frequency of 1
+ * @param {string} query 
+ */
+const updateSearchHistory = (query) => {
+   return new Promise((resolve, reject) => {
+      pool.query(`INSERT INTO SearchHistory (query) VALUES($1)
+            ON CONFLICT (query) DO UPDATE
+            SET frequency = SearchHistory.frequency + 1
+            RETURNING *`, [query], (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -153,13 +173,13 @@ const getCategoriesInDepartment = (departmentId) => {
 }
 
 /**
- * Gets an array of autocomplete search suggestions for a given text
- * @param {string} text The text to get autocomplete suggestions for
+ * Gets an array of past search queries that contain the given search query
+ * @param {string} query The query to match to past search queries
  */
-const getAutocompleteSearchList = (text) => {
-   lowerText = text.toLowerCase();
+const getSimilarPastSearches = (query) => {
+   lowerCaseQuery = query.toLowerCase();
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT category_name FROM Categories WHERE LOWER(category_name) LIKE '${lowerText}%'`, (error, results) => {
+      pool.query(`SELECT * FROM SearchHistory WHERE query LIKE '%${lowerCaseQuery}%'`, (error, results) => {
          if (error) {
             reject(error);
          }
@@ -177,5 +197,6 @@ module.exports = {
    getAllCategories,
    getAllDepartments,
    getCategoriesInDepartment,
-   getAutocompleteSearchList
+   getSimilarPastSearches,
+   updateSearchHistory
 };

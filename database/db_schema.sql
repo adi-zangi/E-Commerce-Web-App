@@ -34,3 +34,9 @@ CREATE TABLE Products (
    FOREIGN KEY (department_id) REFERENCES Departments(department_id),
    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
 );
+
+-- Table for search history
+CREATE TABLE SearchHistory (
+   query VARCHAR PRIMARY KEY,
+   frequency INTEGER NOT NULL DEFAULT 1
+);

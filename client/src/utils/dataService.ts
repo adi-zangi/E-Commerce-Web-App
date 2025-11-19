@@ -1,5 +1,5 @@
 /**
- * Methods to request data from the server
+ * Functions to request data from the server
  */
 
 import { AxiosResponse } from 'axios';
@@ -20,6 +20,17 @@ const addUser = (user: User) : PromiseResponse => {
       last_name: user.last_name,
       password: user.user_password
    });
+}
+
+/**
+ * Updates the search history table with the given search query
+ * If the query is in the table, increments the frequency column by 1
+ * Otherwise, adds the query to the table with a frequency of 1
+ * @param query The search query to add
+ * @returns A promise on the SearchHistory object for the search query
+ */
+const updateSearchHistory = (query: string) : PromiseResponse => {
+   return axios.post(`/search_history/add/${query}`);
 }
 
 /**
@@ -86,14 +97,14 @@ const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
 }
 
 /**
- * Gets an array of autocomplete search suggestions for the given text
- * @param text The text to get autocomplete suggestions for
- * @returns A promise on an array of categories, where the category names are the suggestions
+ * Gets an array of past search queries that contain the given search query
+ * @param text The query to match to past search queries
+ * @returns A promise on an array of SearchHistory
  */
-const getAutocompleteSearchList = (text: string) : PromiseResponse => {
-   return axios.get(`/autocomplete_search_suggestions/${text}`);
+const getSimilarPastSearches = (query: string) : PromiseResponse => {
+   return axios.get(`/search_history/search/${query}`);
 }
 
 export {addUser, getUser, getAllProducts, searchForProducts, getAllCategories,
          getAllDepartments, getCategoriesInDepartment, getProductsByCategory,
-         getAutocompleteSearchList};
+         getSimilarPastSearches, updateSearchHistory};

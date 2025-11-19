@@ -4,11 +4,12 @@
 
 import { Button } from "@blueprintjs/core";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { getAutocompleteSearchList } from "../utils/dataService";
+import { getSimilarPastSearches } from "../utils/dataService";
 import { AxiosResponse } from "axios";
-import { Category } from "../utils/dataTypes";
+import { SearchHistory } from "../utils/dataTypes";
 import { useNavigate } from "react-router-dom";
 import { SearchState } from "./SearchBox";
+import { sortSearchSuggestionsByRelevance } from "../utils/dataUtils";
 
 interface Props {
    searchState: SearchState;
@@ -28,10 +29,13 @@ const SearchAutocomplete: FC<Props> = (props: Props) => {
 
    useEffect(() => {
       const getAutocompleteList = async () => {
-         await getAutocompleteSearchList(props.searchState.query)
-         .then((res: AxiosResponse<Array<Category>>) => {
-            const suggestionsList = res.data.map(category => 
-               category.category_name.toLowerCase());
+         await getSimilarPastSearches(props.searchState.query)
+         .then((res: AxiosResponse<Array<SearchHistory>>) => {
+            const suggestions = sortSearchSuggestionsByRelevance(res.data,
+               props.searchState.query);
+            let topSuggestions = suggestions.slice(0, 6);
+            const suggestionsList = topSuggestions.map(searchHistory => 
+               searchHistory.query);
             setState(prevState => ({ ...prevState, suggestionsList: suggestionsList }));
          })
          .catch((e: Error) => {

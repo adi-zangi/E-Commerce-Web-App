@@ -9,7 +9,7 @@ import SearchResultsGridView from "./SearchResultsGridView";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
-import { sortProductsByRelevance } from "../utils/dataUtils";
+import { recordSearch, sortProductsByRelevance } from "../utils/dataUtils";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 interface Props {
@@ -96,6 +96,17 @@ const sortResults = (results: Product[], params: Params, idToCategoryMap: Map<nu
       return sortProductsByRelevance(results, query, idToCategoryMap);
    }
    return results;
+}
+
+/**
+ * Records the current search to the search history
+ * @param params Search parameters from the current url
+ */
+const addSearchToHistory = async (params: Params) => {
+   let query = params.query;
+   if (query) {
+      await recordSearch(query);
+   }
 }
 
 /**
@@ -226,6 +237,9 @@ const SearchResults: FC<Props> = (props: Props) => {
             });
          results = sortResults(results, params, props.state.idToCategoryMap);
          const itemsPerPage = 6;
+         if (results.length > 0) {
+            await addSearchToHistory(params);
+         }
          setState({
             loading: false,
             results: results,
@@ -233,7 +247,7 @@ const SearchResults: FC<Props> = (props: Props) => {
             pageData: getResultsForPage(results, 1, itemsPerPage),
             itemsPerPage: itemsPerPage,
             numberOfPages: getNumberOfPages(results.length, itemsPerPage),
-         })
+         });
       }
       initializeData();
    }, [location, searchParams, props.state.idToCategoryMap]);

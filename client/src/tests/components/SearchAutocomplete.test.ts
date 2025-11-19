@@ -32,6 +32,9 @@ describe('Search Autocomplete Tests', () => {
       await searchInput.sendKeys('p');
       let autocompleteMenuArray = await driver.findElements(By.className('Search-autocomplete-menu'));
       expect(autocompleteMenuArray).toHaveLength(1);
+      let autocompleteMenu = autocompleteMenuArray[0];
+      let searchSuggestionsArray = await autocompleteMenu.findElements(By.css('button'));
+      expect(searchSuggestionsArray).toHaveLength(6);
    });
 
    it('verifies that search suggestions disappear when the search box becomes empty', async () => {
@@ -64,7 +67,8 @@ describe('Search Autocomplete Tests', () => {
       await firstSuggestion.click();
 
       let url = await driver.getCurrentUrl();
-      expect(url).toBe(`${appUrl}/results/search/?q=${suggestionText}`);
+      let urlParams = suggestionText.replaceAll(/\s/g, "+");
+      expect(url).toBe(`${appUrl}/results/search/?q=${urlParams}`);
    });
 
    it('verifies that making a search makes the search suggestions disappear', async () => {

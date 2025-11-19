@@ -43,3 +43,8 @@ export interface Product {
    price: string;
    image_link: string;
 }
+
+export interface SearchHistory {
+   query: string;
+   frequency: number;
+}

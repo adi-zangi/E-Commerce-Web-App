@@ -3,7 +3,7 @@
  */
 
 import { Product } from '../../utils/dataTypes';
-import { getIdToCategoryMap, sortProductsByRelevance } from '../../utils/dataUtils';
+import { getIdToCategoryMap, sortProductsByRelevance, sortSearchSuggestionsByRelevance } from '../../utils/dataUtils';
 
 describe('Data Utility Tests', () => {
    let idToCategoryMap : Map<number, string>;
@@ -244,5 +244,63 @@ describe('Data Utility Tests', () => {
       let query = "note";
       let sorted = sortProductsByRelevance(products, query, idToCategoryMap);
       expect(sorted).toEqual(sortedProducts);
+   });
+
+   it("verifies sortSearchSuggestionsByRelevance sorts search suggestions corrrectly", async () => {
+      let suggestions = [
+         {
+            query: "pencils",
+            frequency: 1,
+         },
+         {
+            query: "pens",
+            frequency: 1,
+         },
+         {
+            query: "black pens",
+            frequency: 2,
+         },
+         {
+            query: "pencil sharpeners",
+            frequency: 2,
+         },
+         {
+            query: "mechanical pencils",
+            frequency: 2,
+         },
+         {
+            query: "blue pens",
+            frequency: 5,
+         },
+      ];
+      let sortedSuggestions = [
+         {
+            query: "blue pens",
+            frequency: 5,
+         },
+         {
+            query: "black pens",
+            frequency: 2,
+         },
+         {
+            query: "pens",
+            frequency: 1,
+         },
+         {
+            query: "pencil sharpeners",
+            frequency: 2,
+         },
+         {
+            query: "mechanical pencils",
+            frequency: 2,
+         },
+         {
+            query: "pencils",
+            frequency: 1,
+         },
+      ];
+      let query = "pen";
+      let sorted = sortSearchSuggestionsByRelevance(suggestions, query);
+      expect(sorted).toEqual(sortedSuggestions);
    });
 });

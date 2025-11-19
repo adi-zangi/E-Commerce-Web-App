@@ -29,6 +29,17 @@ app.post('/users/create', (req, res) => {
    })
 });
 
+// Update the search history table with a given search query
+app.post('/search_history/add/:query', (req, res) => {
+   db.updateSearchHistory(req.params.query)
+   .then(val => {
+      res.status(200).send(val[0]);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get a user by email
 app.get('/users/:email', (req, res) => {
    db.getUser(req.params.email)
@@ -106,9 +117,9 @@ app.get('/department/:department_id/categories', (req, res) => {
    })
 });
 
-// Get autocomplete search suggestions for a given text
-app.get('/autocomplete_search_suggestions/:text', (req, res) => {
-   db.getAutocompleteSearchList(req.params.text)
+// Get past search queries that contain a given query
+app.get('/search_history/search/:query', (req, res) => {
+   db.getSimilarPastSearches(req.params.query)
    .then(val => {
       res.status(200).send(val);
    })
