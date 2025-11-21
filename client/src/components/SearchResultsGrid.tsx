@@ -1,17 +1,14 @@
 /**
- * A container that displays a list of products as a grid that adjusts to
- * the window size
+ * Displays a list of products as a grid that adjusts to the window size
  */
 
 import { FC, useEffect, useState } from 'react';
 import { AppState, Product } from '../utils/dataTypes';
 import GridItem, { gridItemStyle } from './GridItem';
-import { styleVars } from './SearchResults';
 
 interface Props {
    state: AppState;
    products: Array<Product>;
-   numberOfResults: number;
 }
 
 interface GridProps {
@@ -23,7 +20,7 @@ interface State {
 }
 
 const styles = {
-   containerStyle: {},
+   gridContainerStyle: {},
    gridStyle: {},
 }
 
@@ -36,11 +33,11 @@ const styles = {
 const setGridDimensions = (windowWidth: number) => {
    const cellWidth = gridItemStyle.width + (2 * gridItemStyle.borderThickness);
    const cellGap = 6;
-   const widthFactor = styleVars.widthFactor;
+   const widthFactor = 0.9;
    const itemsPerRow = Math.floor((windowWidth * widthFactor) / (cellWidth + cellGap));
    const containerWidth = itemsPerRow * (cellWidth + cellGap) - cellGap;
 
-   styles.containerStyle = {
+   styles.gridContainerStyle = {
       width: containerWidth
    }
 
@@ -53,7 +50,7 @@ const setGridDimensions = (windowWidth: number) => {
    }
 }
 
-const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
+const GridView: FC<GridProps> = (props: GridProps) => {
    const gridCells = props.products.map(item =>
       <GridItem
          key={item.product_id}
@@ -69,7 +66,7 @@ const SearchResultsGrid: FC<GridProps> = (props: GridProps) => {
    );
 }
 
-const SearchResultsGridView: FC<Props> = (props: Props) => {
+const SearchResultsGrid: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>({ 
       windowWidth: window.innerWidth,
    });
@@ -91,13 +88,10 @@ const SearchResultsGridView: FC<Props> = (props: Props) => {
    setGridDimensions(state.windowWidth);
 
    return (
-      <div className="Grid-container" style={styles.containerStyle}>
-         <div className="Results-header">
-            Found {props.numberOfResults} products
-         </div>
-         <SearchResultsGrid products={props.products} />
+      <div className="Grid-container" style={styles.gridContainerStyle}>
+         <GridView products={props.products} />
       </div>
    );
 }
 
-export default SearchResultsGridView;
+export default SearchResultsGrid;

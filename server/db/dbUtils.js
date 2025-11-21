@@ -13,6 +13,26 @@ const pool = new Pool ({
     port: env.DB_PORT,
 });
 
+const SortOption = Object.freeze({
+   Relevance: "Relevance",
+   AscendingPrice: "Price, low to high",
+   DescendingPrice: "Price, high to low",
+});
+
+/**
+ * Converts the given sort criteria into an ORDER BY statement
+ * @param {string} sortBy An option from the SortOption enum
+ * @returns An ORDER BY statement that sorts by the given criteria
+ */
+const getOrderByStatement = (sortBy) => {
+   if (sortBy === SortOption.AscendingPrice) {
+      return "ORDER BY price ASC";
+   } else if (sortBy === SortOption.DescendingPrice) {
+      return "ORDER BY price DESC";
+   }
+   return "";
+}
+
 /**
  * Inserts a new user
  * @param {string} email The new user's email
@@ -72,10 +92,13 @@ const getUser = (email) => {
 
 /**
  * Gets all the store products
+ * @param {string} sortOption An option from the SortOption enum to sort the products by
  */
-const getAllProducts = () => {
+const getAllProducts = (sortOption) => {
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Products`, (error, results) => {
+      const orderBy = getOrderByStatement(sortOption);
+      pool.query(`SELECT * FROM Products
+                  ${orderBy}`, (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -91,9 +114,11 @@ const getAllProducts = () => {
  * contained in the search query or if the product's name contains all the
  * words in the search query
  * @param {string} searchQuery The search query
+ * @param {string} sortOption An option from the SortOption enum to sort the products by
  */
-const getProductsByQuery = (searchQuery) => {
+const getProductsByQuery = (searchQuery, sortOption) => {
    return new Promise((resolve, reject) => {
+      const orderBy = getOrderByStatement(sortOption);
       searchQuery = searchQuery.toLowerCase();
       const categoryCondition = `category_id IN
          (SELECT category_id FROM Categories WHERE '${searchQuery}' LIKE CONCAT('%', LOWER(category_keyword), '%'))`;
@@ -102,7 +127,8 @@ const getProductsByQuery = (searchQuery) => {
          return `LOWER(product_name) LIKE '%${word}%'`
       });
       const wordConditions = conditionsList.join(' AND ');
-      pool.query(`SELECT * FROM Products WHERE (${categoryCondition}) OR (${wordConditions})`, (error, results) => {
+      pool.query(`SELECT * FROM Products WHERE (${categoryCondition}) OR (${wordConditions})
+                  ${orderBy}`, (error, results) => {
          if (error) {
             reject(error);
          } else {
@@ -115,10 +141,13 @@ const getProductsByQuery = (searchQuery) => {
 /**
  * Gets the store products with a category
  * @param {number} categoryId The category id
+ * @param {string} sortOption An option from the SortOption enum to sort the products by
  */
-const getProductsByCategory = (categoryId) => {
+const getProductsByCategory = (categoryId, sortOption) => {
+   const orderBy = getOrderByStatement(sortOption);
    return new Promise((resolve, reject) => {
-      pool.query(`SELECT * FROM Products WHERE category_id=$1`, [categoryId], (error, results) => {
+      pool.query(`SELECT * FROM Products WHERE category_id=$1
+                  ${orderBy}`, [categoryId], (error, results) => {
          if (error) {
             reject(error);
          }

@@ -1,16 +1,17 @@
 /**
- * A container that displays search results and allows to navigate between
- * pages of search results
+ * Displays search results and allows to navigate between pages of search
+ * results
  */
 
 import { FC, useEffect, useRef, useState } from "react";
-import { AppState, Product } from "../utils/dataTypes";
-import SearchResultsGridView from "./SearchResultsGridView";
+import { AppState, Product, SortOption } from "../utils/dataTypes";
+import SearchResultsGrid from "./SearchResultsGrid";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
 import { recordSearch, sortProductsByRelevance } from "../utils/dataUtils";
 import { useLocation, useSearchParams } from "react-router-dom";
+import SearchResultsOptionsMenu from "./SearchResultsOptionsMenu";
 
 interface Props {
    state: AppState;
@@ -29,41 +30,15 @@ interface State {
    pageData: Array<Product>;
    itemsPerPage: number;
    numberOfPages: number;
+   query: string | null;
+   categoryId: number | null;
+   sortBy: string;
 }
 
 interface Params {
    query: string | null;
    categoryId: number | null;
-}
-
-export const styleVars = {
-   widthFactor: 0.9
-}
-
-const containerStyle = {
-   width: styleVars.widthFactor * 100 + 'vw'
-}
-
-/**
- * Returns an object containing search parameters from the given URLSearchParams
- * @param params The search parameters as URLSearchParams 
- * @param idToCategoryMap A map of category id's and names
- * @returns An object containing search parameters
- */
-const parseSearchParams = (params: URLSearchParams, idToCategoryMap: Map<number, string>) : Params => {
-   let query = params.get("q");
-   let category = params.get("c");
-   let categoryId = null;
-   
-   if (category) {
-      idToCategoryMap.forEach((val, key) => {
-         if (val === category) {
-            categoryId = key;
-         }
-      });
-   }
-   
-   return {query: query, categoryId: categoryId};
+   sortBy: string;
 }
 
 /**
@@ -72,24 +47,26 @@ const parseSearchParams = (params: URLSearchParams, idToCategoryMap: Map<number,
  * @param params Search parameters from the current url
  */
 const getSearchResults = (params: Params) : Promise<AxiosResponse<any, any>> => {
+   const sortOption = params.sortBy ? params.sortBy : SortOption.Relevance;
    if (params.query) {
-      return searchForProducts(params.query);
+      return searchForProducts(params.query, sortOption);
    } else if (params.categoryId) {
-      return getProductsByCategory(params.categoryId);
+      return getProductsByCategory(params.categoryId, sortOption);
    } else {
-      return searchForProducts("");
+      return searchForProducts("", sortOption);
    }
 }
 
 /**
- * Sorts the search results by relevance
+ * Sorts the search results
  * @param results The search results
  * @param params Search parameters from the current url
  * @param idToCategoryMap A map of category id's and names
+ * @returns The sorted search results
  */
 const sortResults = (results: Product[], params: Params, idToCategoryMap: Map<number, string>) : Product[] => {
    let query = params.query;
-   if (query) {
+   if (query && (params.sortBy === SortOption.Relevance)) {
       return sortProductsByRelevance(results, query, idToCategoryMap);
    }
    return results;
@@ -205,7 +182,7 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
    );
 }
 
-const SearchResults: FC<Props> = (props: Props) => {
+const SearchResultsPage: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>({
       loading: true,
       results: [],
@@ -213,6 +190,9 @@ const SearchResults: FC<Props> = (props: Props) => {
       pageData: [],
       itemsPerPage: 0,
       numberOfPages: 0,
+      query: null,
+      categoryId: null,
+      sortBy: "",
    });
 
    const [searchParams] = useSearchParams();
@@ -224,6 +204,7 @@ const SearchResults: FC<Props> = (props: Props) => {
             return;
          }
          let results = new Array<Product>();
+         let sortOption = "";
          const params = parseSearchParams(searchParams, props.state.idToCategoryMap);
          await getSearchResults(params)
             .then((res: any) => {
@@ -244,10 +225,43 @@ const SearchResults: FC<Props> = (props: Props) => {
             pageData: getResultsForPage(results, 1, itemsPerPage),
             itemsPerPage: itemsPerPage,
             numberOfPages: getNumberOfPages(results.length, itemsPerPage),
+            query: params.query,
+            categoryId: params.categoryId,
+            sortBy: params.sortBy,
          });
       }
       initializeData();
    }, [location, props.state.idToCategoryMap]);
+
+   /**
+    * Returns an object containing search parameters from the given URLSearchParams
+    * @param params The search parameters as URLSearchParams 
+    * @param idToCategoryMap A map of category id's and names
+    * @returns An object containing search parameters
+    */
+   const parseSearchParams = (params: URLSearchParams, idToCategoryMap: Map<number, string>) : Params => {
+      let query = params.get("q");
+      let category = params.get("c");
+      let sortBy = params.get("sort");
+      let categoryId = null;
+      
+      if (category) {
+         idToCategoryMap.forEach((val, key) => {
+            if (val === category) {
+               categoryId = key;
+            }
+         });
+      }
+      
+      if (!sortBy) {
+         sortBy = SortOption.Relevance;
+      } else if ((state.query && (query !== state.query)) ||
+                  (state.categoryId && (categoryId !== state.categoryId))) {
+         sortBy = SortOption.Relevance;
+      }
+      
+      return {query: query, categoryId: categoryId, sortBy: sortBy};
+   }
 
    const setPage = (page: number) => {
       setState({
@@ -258,22 +272,21 @@ const SearchResults: FC<Props> = (props: Props) => {
    }
 
    return (
-      <div className="Results-container" style={containerStyle}>
+      <div className="Results-container">
          { state.loading && 
                <div className="Spinner-container">
                   <Spinner intent="primary" />
                </div>
          }
-         { !state.loading && (state.results.length === 0) &&
-               <div className="No-results-header">
-                  No matches found
-               </div>
+         { !state.loading &&
+               <SearchResultsOptionsMenu
+                  sortByOption={state.sortBy}
+                  numberOfResults={state.results.length} />
          }
          { !state.loading && (state.results.length > 0) && 
-               <SearchResultsGridView
+               <SearchResultsGrid
                   state={props.state}
-                  products={state.pageData}
-                  numberOfResults={state.results.length} />
+                  products={state.pageData} />
          }
          { !state.loading && (state.results.length > 0) && 
                <PagePicker
@@ -285,4 +298,4 @@ const SearchResults: FC<Props> = (props: Props) => {
    );
 }
 
-export default SearchResults;
+export default SearchResultsPage;

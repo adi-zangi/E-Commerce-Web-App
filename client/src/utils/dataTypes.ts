@@ -16,6 +16,12 @@ export interface AppState {
    idToCategoryMap: Map<number, string>;
 }
 
+export enum SortOption {
+   Relevance = "Relevance",
+   AscendingPrice = "Price, low to high",
+   DescendingPrice = "Price, high to low",
+}
+
 export interface User {
    user_email: string;
    first_name: string;

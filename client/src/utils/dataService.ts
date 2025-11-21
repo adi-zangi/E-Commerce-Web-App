@@ -45,32 +45,36 @@ const getUser = (email: string) : PromiseResponse => {
 
 /**
  * Gets all the store products from the database
+ * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const getAllProducts = () : PromiseResponse => {
-   return axios.get(`/products`);
+const getAllProducts = (sortOption: string) : PromiseResponse => {
+   return axios.get(`/products/sort_by/${sortOption}`);
 }
 
 /**
  * Gets the store products that match a given search query from the database
  * Expects a search query that is not URL encoded
  * @param query The search query, not URL encoded
+ * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const searchForProducts = (query: string): PromiseResponse => {
+const searchForProducts = (query: string, sortOption: string): PromiseResponse => {
    if (query.length === 0) {
-      return getAllProducts();
+      return getAllProducts(sortOption);
    }
-   return axios.get(`/products/search/${encodeURIComponent(query)}`);
+   const encodedQuery = encodeURIComponent(query);
+   return axios.get(`/products/search/${encodedQuery}/sort_by/${sortOption}`);
 }
 
 /**
  * Gets the store products with a given category from the database
  * @param categoryId The category id
+ * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const getProductsByCategory = (categoryId: number): PromiseResponse => {
-   return axios.get(`/products/category/${categoryId}`);
+const getProductsByCategory = (categoryId: number, sortOption: string): PromiseResponse => {
+   return axios.get(`/products/category/${categoryId}/sort_by/${sortOption}`);
 }
 
 /**

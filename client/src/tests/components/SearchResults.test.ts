@@ -1,5 +1,5 @@
 /**
- * Tests the SearchResults component
+ * Tests the SearchResultsPage component
  */
 
 import { Builder, Browser, By, WebDriver, Key } from 'selenium-webdriver';
