@@ -52,8 +52,8 @@ app.get('/users/:email', (req, res) => {
 });
 
 // Get all products
-app.get('/products', (req, res) => {
-   db.getAllProducts()
+app.get('/products/sort_by/:sort_option', (req, res) => {
+   db.getAllProducts(req.params.sort_option)
    .then(val => {
       res.status(200).send(val);
    })
@@ -63,8 +63,8 @@ app.get('/products', (req, res) => {
 });
 
 // Get products by a search query
-app.get('/products/search/:search_query', (req, res) => {
-   db.getProductsByQuery(req.params.search_query)
+app.get('/products/search/:search_query/sort_by/:sort_option', (req, res) => {
+   db.getProductsByQuery(req.params.search_query, req.params.sort_option)
    .then(val => {
       res.status(200).send(val);
    })
@@ -74,8 +74,8 @@ app.get('/products/search/:search_query', (req, res) => {
 });
 
 // Get products by a category
-app.get('/products/category/:category_id', (req, res) => {
-   db.getProductsByCategory(req.params.category_id)
+app.get('/products/category/:category_id/sort_by/:sort_option', (req, res) => {
+   db.getProductsByCategory(req.params.category_id, req.params.sort_option)
    .then(val => {
       res.status(200).send(val);
    })
