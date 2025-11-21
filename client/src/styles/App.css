@@ -69,15 +69,25 @@
 
 .Results-container {
    margin: 0 auto 0;
+   width: fit-content;
+}
+
+.Results-header {
+   padding: 1.25vh 0;
+   display: flex;
+   align-items: center;
+}
+
+.Results-title {
+   margin: 0;
+}
+
+.Sort-btn {
+   margin-left: auto;
 }
 
 .Grid-container {
    margin: 0 auto 0;
-}
-
-.Results-header {
-   padding: 2vh 0;
-   text-align: left;
 }
 
 .Spinner-container {

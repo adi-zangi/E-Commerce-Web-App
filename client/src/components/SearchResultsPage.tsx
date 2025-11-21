@@ -1,16 +1,17 @@
 /**
- * A container that displays search results and allows to navigate between
- * pages of search results
+ * Displays search results and allows to navigate between pages of search
+ * results
  */
 
 import { FC, useEffect, useRef, useState } from "react";
 import { AppState, Product } from "../utils/dataTypes";
-import SearchResultsGridView from "./SearchResultsGridView";
+import SearchResultsGrid from "./SearchResultsGrid";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts } from "../utils/dataService";
 import { AxiosResponse } from "axios";
 import { recordSearch, sortProductsByRelevance } from "../utils/dataUtils";
 import { useLocation, useSearchParams } from "react-router-dom";
+import SearchResultsOptionsMenu from "./SearchResultsOptionsMenu";
 
 interface Props {
    state: AppState;
@@ -34,14 +35,6 @@ interface State {
 interface Params {
    query: string | null;
    categoryId: number | null;
-}
-
-export const styleVars = {
-   widthFactor: 0.9
-}
-
-const containerStyle = {
-   width: styleVars.widthFactor * 100 + 'vw'
 }
 
 /**
@@ -205,7 +198,7 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
    );
 }
 
-const SearchResults: FC<Props> = (props: Props) => {
+const SearchResultsPage: FC<Props> = (props: Props) => {
    const [state, setState] = useState<State>({
       loading: true,
       results: [],
@@ -258,22 +251,20 @@ const SearchResults: FC<Props> = (props: Props) => {
    }
 
    return (
-      <div className="Results-container" style={containerStyle}>
+      <div className="Results-container">
          { state.loading && 
                <div className="Spinner-container">
                   <Spinner intent="primary" />
                </div>
          }
-         { !state.loading && (state.results.length === 0) &&
-               <div className="No-results-header">
-                  No matches found
-               </div>
+         { !state.loading &&
+               <SearchResultsOptionsMenu
+                  numberOfResults={state.results.length} />
          }
          { !state.loading && (state.results.length > 0) && 
-               <SearchResultsGridView
+               <SearchResultsGrid
                   state={props.state}
-                  products={state.pageData}
-                  numberOfResults={state.results.length} />
+                  products={state.pageData} />
          }
          { !state.loading && (state.results.length > 0) && 
                <PagePicker
@@ -285,4 +276,4 @@ const SearchResults: FC<Props> = (props: Props) => {
    );
 }
 
-export default SearchResults;
+export default SearchResultsPage;

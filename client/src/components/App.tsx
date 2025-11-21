@@ -7,7 +7,7 @@ import '../styles/App.css';
 import HomePage from './HomePage';
 import AppNavBar from './AppNavBar';
 import { AppState, Page, User } from '../utils/dataTypes';
-import SearchResults from './SearchResults';
+import SearchResultsPage from './SearchResultsPage';
 import TopMenu from './TopMenu';
 import LogInPage from './LogInPage';
 import { getIdToCategoryMap } from '../utils/dataUtils';
@@ -104,7 +104,7 @@ const App: FC = () => {
                <>
                   <TopMenu state={state} />
                   <AppNavBar state={state} logOutUser={logOutUser} />
-                  <SearchResults state={state} />
+                  <SearchResultsPage state={state} />
                </>
                }
             />
