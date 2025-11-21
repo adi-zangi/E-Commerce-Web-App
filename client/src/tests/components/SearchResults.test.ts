@@ -28,7 +28,7 @@ describe('Search Results Tests', () => {
    });
 
    it('navigates to the search results for a search query and verifies the results are present', async () => {
-      await driver.get(`${appUrl}/results/search/?q=blue+pens`);
+      await driver.get(`${appUrl}/results/search/?q=${encodeURIComponent('blue pens')}`);
 
       // Search results are present
       let itemCardArray = await driver.findElements(By.className('Item-card'));

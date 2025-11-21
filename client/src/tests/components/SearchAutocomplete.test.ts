@@ -67,8 +67,8 @@ describe('Search Autocomplete Tests', () => {
       await firstSuggestion.click();
 
       let url = await driver.getCurrentUrl();
-      let urlParams = suggestionText.replaceAll(/\s/g, "+");
-      expect(url).toBe(`${appUrl}/results/search/?q=${urlParams}`);
+      let expectedParams = encodeURIComponent(suggestionText);
+      expect(url).toBe(`${appUrl}/results/search/?q=${expectedParams}`);
    });
 
    it('verifies that making a search makes the search suggestions disappear', async () => {

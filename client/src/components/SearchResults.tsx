@@ -54,17 +54,15 @@ const parseSearchParams = (params: URLSearchParams, idToCategoryMap: Map<number,
    let query = params.get("q");
    let category = params.get("c");
    let categoryId = null;
-   if (query) {
-      query.replaceAll("+", " ");
-   }
+   
    if (category) {
-      category = category.replaceAll("+", " ");
       idToCategoryMap.forEach((val, key) => {
          if (val === category) {
             categoryId = key;
          }
       });
    }
+   
    return {query: query, categoryId: categoryId};
 }
 
@@ -91,7 +89,6 @@ const getSearchResults = (params: Params) : Promise<AxiosResponse<any, any>> => 
  */
 const sortResults = (results: Product[], params: Params, idToCategoryMap: Map<number, string>) : Product[] => {
    let query = params.query;
-   query = query ? query.replaceAll("+", " ") : query;
    if (query) {
       return sortProductsByRelevance(results, query, idToCategoryMap);
    }
@@ -250,7 +247,7 @@ const SearchResults: FC<Props> = (props: Props) => {
          });
       }
       initializeData();
-   }, [location, searchParams, props.state.idToCategoryMap]);
+   }, [location, props.state.idToCategoryMap]);
 
    const setPage = (page: number) => {
       setState({

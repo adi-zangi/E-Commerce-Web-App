@@ -46,7 +46,7 @@ const SearchAutocomplete: FC<Props> = (props: Props) => {
    }, [props.searchState.query]);
 
    const handleItemClick = (itemText: string) => {
-      navigate("/results/search/?q=" + itemText.replaceAll(/\s/g, "+"));
+      navigate("/results/search/?q=" + encodeURIComponent(itemText));
       props.setSearchState({ ...props.searchState, showAutocomplete: false });
    }
 

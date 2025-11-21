@@ -26,11 +26,12 @@ const addUser = (user: User) : PromiseResponse => {
  * Updates the search history table with the given search query
  * If the query is in the table, increments the frequency column by 1
  * Otherwise, adds the query to the table with a frequency of 1
- * @param query The search query to add
+ * Expects a search query that is not URL encoded
+ * @param query The search query to add, not URL encoded
  * @returns A promise on the SearchHistory object for the search query
  */
 const updateSearchHistory = (query: string) : PromiseResponse => {
-   return axios.post(`/search_history/add/${query}`);
+   return axios.post(`/search_history/add/${encodeURIComponent(query)}`);
 }
 
 /**
@@ -52,14 +53,15 @@ const getAllProducts = () : PromiseResponse => {
 
 /**
  * Gets the store products that match a given search query from the database
- * @param query The search query
+ * Expects a search query that is not URL encoded
+ * @param query The search query, not URL encoded
  * @returns A promise on an array of Product
  */
 const searchForProducts = (query: string): PromiseResponse => {
    if (query.length === 0) {
       return getAllProducts();
    }
-   return axios.get(`/products/search/${query}`);
+   return axios.get(`/products/search/${encodeURIComponent(query)}`);
 }
 
 /**
@@ -98,11 +100,12 @@ const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
 
 /**
  * Gets an array of past search queries that contain the given search query
- * @param text The query to match to past search queries
+ * Expects a search query that is not URL encoded
+ * @param text The query to match to past search queries, not URL encoded
  * @returns A promise on an array of SearchHistory
  */
 const getSimilarPastSearches = (query: string) : PromiseResponse => {
-   return axios.get(`/search_history/search/${query}`);
+   return axios.get(`/search_history/search/${encodeURIComponent(query)}`);
 }
 
 export {addUser, getUser, getAllProducts, searchForProducts, getAllCategories,

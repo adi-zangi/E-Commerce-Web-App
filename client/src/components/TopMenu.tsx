@@ -93,7 +93,7 @@ const TopMenu: FC<Props> = (props: Props) => {
    }, [state.departments]);
 
    const handleMenuItemClick = async (category: Category) => {
-      navigate("/results/category/?c=" + category.category_name.replaceAll(/\s/g, "+"));
+      navigate("/results/category/?c=" + encodeURIComponent(category.category_name));
    }
 
    const menuItems = state.departments.map((department, index) => 

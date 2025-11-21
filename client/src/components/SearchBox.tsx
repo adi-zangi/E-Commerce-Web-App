@@ -34,7 +34,7 @@ const SearchBox: FC<Props> = (props: Props) => {
 
    const handleSearchClick = () => {
       if (state.query.length > 0) {
-         navigate("/results/search/?q=" + state.query.replaceAll(/\s/g, "+"));
+         navigate("/results/search/?q=" + encodeURIComponent(state.query));
       } else {
          navigate("/results/all");
       }
@@ -77,7 +77,6 @@ const SearchBox: FC<Props> = (props: Props) => {
          let query = "";
          if (searchParams.has("q")) {
             query = searchParams.get("q") + "";
-            query = query.replaceAll("+", " ");
          }
          if (searchBox.current && (searchBox.current.value !== query)) {
             searchBox.current.value = query;
