@@ -35,6 +35,15 @@ const updateSearchHistory = (query: string) : PromiseResponse => {
 }
 
 /**
+ * Returns true if a user with the given email exists and false otherwise
+ * @param email The email
+ * @returns A promise on a boolean
+ */
+const isExistingUser = (email: string) : PromiseResponse => {
+   return axios.get(`/user_exists/${email}`);
+}
+
+/**
  * Gets a user from the database
  * @param email The user's email
  * @returns A promise on a User object
@@ -112,6 +121,6 @@ const getSimilarPastSearches = (query: string) : PromiseResponse => {
    return axios.get(`/search_history/search/${encodeURIComponent(query)}`);
 }
 
-export {addUser, getUser, getAllProducts, searchForProducts, getAllCategories,
-         getAllDepartments, getCategoriesInDepartment, getProductsByCategory,
-         getSimilarPastSearches, updateSearchHistory};
+export {addUser, getUser, isExistingUser, getAllProducts, searchForProducts,
+         getAllCategories, getAllDepartments, getCategoriesInDepartment,
+         getProductsByCategory, getSimilarPastSearches, updateSearchHistory};

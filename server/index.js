@@ -5,6 +5,7 @@
 const express = require('express');
 const db = require('./db/dbUtils');
 const env = require('../client/src/env');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const serverPort = env.SERVER_PORT || 3001;
@@ -16,6 +17,15 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
   next();
+});
+
+const loginLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000, // 15 minutes
+   max: 5, // Max 5 login attempts per window
+   keyGenerator: (req, res) => {
+      const email = req.params.email;
+      return email || ipKeyGenerator(req.ip); // Fallback to IP
+   }
 });
 
 // Add a user
@@ -40,8 +50,20 @@ app.post('/search_history/add/:query', (req, res) => {
    })
 });
 
+// Check if a user with a given email exists
+// Returns a boolean
+app.get('/user_exists/:email', (req, res) => {
+   db.isExistingUser(req.params.email)
+   .then(val => {
+      res.status(200).send(val);
+   })
+   .catch(err => {
+      res.status(500).send(err);
+   })
+});
+
 // Get a user by email
-app.get('/users/:email', (req, res) => {
+app.get('/users/:email', loginLimiter, (req, res) => {
    db.getUser(req.params.email)
    .then(val => {
       res.status(200).send(val[0]);

@@ -75,6 +75,22 @@ const updateSearchHistory = (query) => {
 }
 
 /**
+ * Returns true if a user with the given email exists and false otherwise
+ * @param {string} email The email
+ */
+const isExistingUser = (email) => {
+   return new Promise((resolve, reject) => {
+      pool.query(`SELECT user_email FROM Users WHERE user_email=$1`, [email], (error, results) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(results.rows.length > 0);
+         }
+      });
+   });
+}
+
+/**
  * Gets a user
  * @param {string} email The user's email
  */
@@ -219,6 +235,7 @@ const getSimilarPastSearches = (query) => {
 
 module.exports = {
    addUser,
+   isExistingUser,
    getUser,
    getAllProducts,
    getProductsByQuery,

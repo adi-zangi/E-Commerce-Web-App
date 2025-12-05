@@ -5,6 +5,43 @@
 import { getAllCategories, updateSearchHistory } from "./dataService";
 import { Category, Product, SearchHistory } from "./dataTypes";
 import levenshtein from "fast-levenshtein";
+import bcrypt from "bcryptjs";
+
+/**
+ * Returns a hash for the given password
+ * @param password The password
+ * @returns The hashed password as a string or null if it couldn't be obtained
+ */
+const getHashedPassword = async (password: string) : Promise<string | null> => {
+   let hashedPassword = null;
+   const saltRounds = 12;
+   await bcrypt.hash(password, saltRounds)
+      .then((res: string) => {
+         hashedPassword = res;
+      })
+      .catch((e: Error) => {
+         console.log(e);
+      });
+   return hashedPassword;
+}
+
+/**
+ * Compares the given password to the given hash and returns true if they match
+ * @param password The password
+ * @param hash The hash
+ * @returns True if the password matches the hash, false otherwise
+ */
+const comparePassword = async (password: string, hash: string) => {
+   let isMatch = false;
+   await bcrypt.compare(password, hash)
+      .then((res: boolean) => {
+         isMatch = res;
+      })
+      .catch((e: Error) => {
+         console.log(e);
+      });
+   return isMatch;
+}
 
 /**
  * Gets a map of all the categories in the store with category id's as keys
@@ -128,5 +165,5 @@ const getDistanceToQuery = (str: string, query: string) : number => {
    return distanceToQuery;
 }
 
-export {getIdToCategoryMap, sortProductsByRelevance, recordSearch,
-   sortSearchSuggestionsByRelevance};
+export { getHashedPassword, comparePassword, getIdToCategoryMap,
+   sortProductsByRelevance, recordSearch, sortSearchSuggestionsByRelevance};

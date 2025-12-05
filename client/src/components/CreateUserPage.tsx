@@ -7,6 +7,7 @@ import { AppState, User } from "../utils/dataTypes";
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import { addUser, getUser } from "../utils/dataService";
 import { useNavigate } from "react-router-dom";
+import { getHashedPassword } from "../utils/dataUtils";
 
 interface Props {
    state: AppState;
@@ -103,7 +104,18 @@ const CreateUserPage: FC<Props> = (props: Props) => {
       }
    }
 
-   const handleLogInClick = async () => {
+   // Hashes the given password and updates the given state object
+   // Returns the hashed password
+   const hashPassword = async (password: string, newState: State) : Promise<string | null> => {
+      const hashedPassword = await getHashedPassword(password);
+      if (!hashedPassword) {
+         newState.passwordValid = false;
+         newState.passwordHelptext = "Something went wrong";
+      }
+      return hashedPassword;
+   }
+
+   const handleSubmit = async () => {
       setState({ ...state, loading: true });
       const email = emailRef.current?.value || "";
       const firstName = firstNameRef.current?.value || "";
@@ -113,18 +125,23 @@ const CreateUserPage: FC<Props> = (props: Props) => {
       await validateEmail(email, newState);
       validateName(firstName, lastName, newState);
       validatePassword(password, newState);
+      let hashedPassword;
+      if (newState.passwordValid) {
+         hashedPassword = await hashPassword(password, newState);
+      }
       if (newState.emailValid && newState.firstNameValid &&
-         newState.lastNameValid && newState.passwordValid) {
+         newState.lastNameValid && newState.passwordValid &&
+         hashedPassword) {
             const user: User = {
                user_email: email,
                first_name: firstName,
                last_name: lastName,
-               user_password: password
+               user_password: hashedPassword
             };
             await addUser(user);
             navigate(-1);
       } else {
-         setState({ ...newState });
+         setState(newState);
       }
    }
 
@@ -205,7 +222,7 @@ const CreateUserPage: FC<Props> = (props: Props) => {
             intent="primary"
             rightIcon="arrow-right"
             loading={state.loading}
-            onClick={handleLogInClick} />
+            onClick={handleSubmit} />
       </div>
    );
 }

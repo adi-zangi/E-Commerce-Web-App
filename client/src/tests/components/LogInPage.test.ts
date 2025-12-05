@@ -29,7 +29,7 @@ describe('Log In Page Tests', () => {
       expect(url).toBe(`${appUrl}/signup`);
    });
 
-   it('verifies logging in with empty credentials shows an email error and stays on the page', async () => {
+   it('verifies logging in with empty credentials shows an email error', async () => {
       await driver.get(`${appUrl}/login`);
       let submitLogInButton = await driver.findElement(By.id('submitLogInBtn'));
       await submitLogInButton.click();
@@ -49,7 +49,7 @@ describe('Log In Page Tests', () => {
       expect(passFieldText).toBe('');
    });
 
-   it('verifies logging in with an invalid email shows an email error and stays on the page', async () => {
+   it('verifies logging in with an invalid email shows an email error', async () => {
       await driver.get(`${appUrl}/login`);
       let emailInput = await driver.findElement(By.id('loginEmailInput'));
       await emailInput.sendKeys('bla');
@@ -69,5 +69,79 @@ describe('Log In Page Tests', () => {
       let passField = await driver.findElement(By.id('loginPassField'));
       let passFieldText = await passField.getText();
       expect(passFieldText).toBe('');
+   });
+
+   it('verifies logging in with a valid email and an empty password shows a password error', async () => {
+      await driver.get(`${appUrl}/login`);
+      let emailInput = await driver.findElement(By.id('loginEmailInput'));
+      await emailInput.sendKeys('test1@gmail.com');
+      let submitLogInButton = await driver.findElement(By.id('submitLogInBtn'));
+      await submitLogInButton.click();
+
+      // The page doesn't change
+      let url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/login`);
+
+      // An email error doesn't show
+      let emailField = await driver.findElement(By.id('loginEmailField'));
+      let emailFieldText = await emailField.getText();
+      expect(emailFieldText).toBe('');
+
+      // A password error shows
+      let passField = await driver.findElement(By.id('loginPassField'));
+      let passFieldText = await passField.getText();
+      expect(passFieldText).toBe('Enter your password');
+   });
+
+   it('verifies logging in with a valid email and an invalid password shows a password error', async () => {
+      await driver.get(`${appUrl}/login`);
+      let emailInput = await driver.findElement(By.id('loginEmailInput'));
+      await emailInput.sendKeys('test1@gmail.com');
+      let passwordInput = await driver.findElement(By.id('loginPassInput'));
+      await passwordInput.sendKeys('bla');
+      let submitLogInButton = await driver.findElement(By.id('submitLogInBtn'));
+      await submitLogInButton.click();
+
+      // The page doesn't change
+      let url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/login`);
+
+      // An email error doesn't show
+      let emailField = await driver.findElement(By.id('loginEmailField'));
+      let emailFieldText = await emailField.getText();
+      expect(emailFieldText).toBe('');
+
+      // A password error shows
+      let passField = await driver.findElement(By.id('loginPassField'));
+      let passFieldText = await passField.getText();
+      expect(passFieldText).toBe('This password is incorrect. Please try again.');
+   });
+
+   it('verifies attempting to log in more than 5 times with a valid email locks the account', async () => {
+      await driver.get(`${appUrl}/login`);
+      let emailInput = await driver.findElement(By.id('loginEmailInput'));
+      await emailInput.sendKeys('test2@gmail.com');
+      let passwordInput = await driver.findElement(By.id('loginPassInput'));
+      await passwordInput.sendKeys('bla');
+      let submitLogInButton = await driver.findElement(By.id('submitLogInBtn'));
+
+      // Submits the login form 6 times
+      for (let i = 0; i < 6; i++) {
+         await submitLogInButton.click();
+      }
+
+      // The page doesn't change
+      let url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/login`);
+
+      // An email error doesn't show
+      let emailField = await driver.findElement(By.id('loginEmailField'));
+      let emailFieldText = await emailField.getText();
+      expect(emailFieldText).toBe('');
+
+      // A password error shows
+      let passField = await driver.findElement(By.id('loginPassField'));
+      let passFieldText = await passField.getText();
+      expect(passFieldText).toBe('Too many login attempts for this user. Please try again in 15 minutes.');
    });
 });

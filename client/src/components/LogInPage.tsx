@@ -5,8 +5,10 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import { FC, useRef, useState } from "react";
 import { AppState, User } from "../utils/dataTypes";
-import { getUser } from "../utils/dataService";
+import { getUser, isExistingUser } from "../utils/dataService";
 import { Link, useNavigate } from "react-router-dom";
+import { comparePassword } from "../utils/dataUtils";
+import { AxiosError } from "axios";
 
 interface Props {
    state: AppState;
@@ -41,7 +43,8 @@ const LogInPage: FC<Props> = (props: Props) => {
 
    // Returns true if the form has enough information to validate the login
    // credentials and false otherwise
-   const validateLogInForm = (email: string) : boolean => {
+   // Updates the error status and helptext on the form
+   const validateLogInForm = async (email: string, password: string) : Promise<boolean> => {
       if (email.length === 0) {
          const emailHelptext = "Enter your email";
          setState({
@@ -50,44 +53,76 @@ const LogInPage: FC<Props> = (props: Props) => {
             emailHelptext: emailHelptext,
          });
          return false;
+      } else {
+         let userExists = false;
+         await isExistingUser(email)
+            .then((res: any) => {
+               userExists = res.data;
+            })
+            .catch((e: AxiosError) => {
+               console.log(e);
+            });
+         if (!userExists) {
+            const emailHelptext = "We couldn't find a user with this email";
+            setState({
+               ...defaultState,
+               emailValid: false,
+               emailHelptext: emailHelptext,
+            });
+            return false;
+         } else if (password.length === 0) {
+            const passwordHelptext = "Enter your password";
+            setState({
+               ...defaultState,
+               passwordValid: false,
+               passwordHelptext: passwordHelptext,
+            });
+            return false;
+         }
       }
       return true;
    }
 
    // Validates the login credentials entered
+   // Updates the error status and helptext on the form
    const validateLogInCredentials = async (email: string, password: string) => {
-      let user : User | null = null;
+      let user;
+      let tooManyAttempts;
       await getUser(email)
          .then((res: any) => {
             user = res.data;
          })
-         .catch((e: Error) => {
+         .catch((e: AxiosError) => {
             console.log(e);
+            tooManyAttempts = e.status === 429;
          });
-      if (!user) {
-         const emailHelptext = "We couldn't find a user with this email";
+      if (tooManyAttempts) {
+         const passwordHelptext = "Too many login attempts for this user. Please try again in 15 minutes.";
+         setState({
+            ...defaultState,
+            passwordValid: false,
+            passwordHelptext: passwordHelptext,
+         });
+      } else if (!user) {
+         const passwordHelptext = "Something went wrong. Please try again later.";
          setState({
             ...defaultState,
             emailValid: false,
-            emailHelptext: emailHelptext,
-         });
-      } else if (password.length === 0) {
-         const passwordHelptext = "Enter your password";
-         setState({
-            ...defaultState,
-            passwordValid: false,
             passwordHelptext: passwordHelptext,
          });
-      } else if (user['user_password'] === password) {
-         props.setUser(user);
-         navigate(-1);
       } else {
-         const passwordHelptext = "This password is incorrect. Please try again.";
-         setState({
-            ...defaultState,
-            passwordValid: false,
-            passwordHelptext: passwordHelptext,
-         });
+         const isPasswordMatch = await comparePassword(password, user['user_password']);
+         if (isPasswordMatch) {
+            props.setUser(user);
+            navigate("/");
+         } else {
+            const passwordHelptext = "This password is incorrect. Please try again.";
+            setState({
+               ...defaultState,
+               passwordValid: false,
+               passwordHelptext: passwordHelptext,
+            });
+         }
       }
    }
 
@@ -95,7 +130,7 @@ const LogInPage: FC<Props> = (props: Props) => {
       setState({ ...state, loading: true });
       const email = emailRef.current?.value || "";
       const password = passwordRef.current?.value || "";
-      if (validateLogInForm(email)) {
+      if (await validateLogInForm(email, password)) {
          await validateLogInCredentials(email, password);
       }
    }
