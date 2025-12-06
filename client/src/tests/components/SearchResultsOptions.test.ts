@@ -31,13 +31,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it("verifies that the selected sort option is 'relevance' when a new search is made", async () => {
-      await driver.get(appUrl);
-
-      // Makes a search
-      let searchInput = await driver.findElement(By.id('searchInput'));
-      let searchButton = await driver.findElement(By.id('searchBtn'));
-      await searchInput.sendKeys('pencils');
-      await searchButton.click();
+      await driver.get(`${appUrl}/results/search/?q=pencils`);
       
       // Verifies that 'relevance' is selected
       let sortSelect = await driver.findElement(By.id('sortBtn'));
@@ -59,54 +53,41 @@ describe('Search Results Options Tests', () => {
       expect(url).toBe(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
    });
 
-   it("verifies that the selected sort option resets to 'relevance' when multiple searches are made", async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils`);
-      
-      // Selects to sort by 'price, low to high'
+   it('verifies that that selected option in the sort menu matches the url', async () => {
+      await driver.get(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+high+to+low`);
+
+      // Verifies that 'price, high to low' is selected
       const sortSelect = await driver.findElement(By.id('sortBtn'));
-      await sortSelect.click();
-      let sortMenu = await driver.findElement(By.css('ul'));
-      let menuOptions = await sortMenu.findElements(By.css('li'));
-      let secondOption = menuOptions[1];
-      await secondOption.click();
-      const url = await driver.getCurrentUrl();
-      expect(url).toBe(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
+      const selected = await sortSelect.getText();
+      expect(selected).toBe('Sort by: Price, high to low');
+   });
+
+   it("verifies that the selected sort option resets to 'relevance' after a search is made", async () => {
+      await driver.get(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
 
       // Makes a search
       const searchInput = await driver.findElement(By.id('searchInput'));
       const searchButton = await driver.findElement(By.id('searchBtn'));
-      await searchInput.clear();
       await searchInput.sendKeys('books');
       await searchButton.click();
+      const url = await driver.getCurrentUrl();
+      expect(url).toBe(`${appUrl}/results/search/?q=books`);
 
       // Verifies that 'relevance' is selected
-      const secondSortSelect = await driver.findElement(By.id('sortBtn'));
-      const selected = await secondSortSelect.getText();
+      const sortSelect = await driver.findElement(By.id('sortBtn'));
+      const selected = await sortSelect.getText();
       expect(selected).toBe('Sort by: Relevance'); 
    });
 
    it('verifies that the selected sort option stays the same after the page refreshes', async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils`);
-      let sortSelect;
-      let selected;
-      
-      // Selects to sort by 'price, low to high'
-      sortSelect = await driver.findElement(By.id('sortBtn'));
-      await sortSelect.click();
-      let sortMenu = await driver.findElement(By.css('ul'));
-      let menuOptions = await sortMenu.findElements(By.css('li'));
-      let secondOption = menuOptions[1];
-      await secondOption.click();
-      sortSelect = await driver.findElement(By.id('sortBtn'));
-      selected = await sortSelect.getText();
-      expect(selected).toBe('Sort by: Price, low to high');
+      await driver.get(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
 
       // Refreshes the page
-      driver.navigate().refresh();
+      await driver.navigate().refresh();
 
       // Verifies that 'price, low to high' is selected
-      sortSelect = await driver.findElement(By.id('sortBtn'));
-      selected = await sortSelect.getText();
+      const sortSelect = await driver.findElement(By.id('sortBtn'));
+      const selected = await sortSelect.getText();
       expect(selected).toBe('Sort by: Price, low to high');
    });
 });
