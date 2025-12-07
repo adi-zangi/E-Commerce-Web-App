@@ -2,8 +2,8 @@
  * Makes requests to the shop database
  */
 
-const { Pool } = require('pg');
-const env = require('../../client/src/env');
+import { Pool } from 'pg';
+import env from '../../client/src/env.json';
 
 const pool = new Pool ({
     user: env.DB_USER,
@@ -13,18 +13,19 @@ const pool = new Pool ({
     port: env.DB_PORT,
 });
 
-const SortOption = Object.freeze({
+const SortOption =
+{
    Relevance: "Relevance",
    AscendingPrice: "Price, low to high",
    DescendingPrice: "Price, high to low",
-});
+};
 
 /**
  * Converts the given sort criteria into an ORDER BY statement
- * @param {string} sortBy An option from the SortOption enum
+ * @param sortBy An option from the SortOption enum
  * @returns An ORDER BY statement that sorts by the given criteria
  */
-const getOrderByStatement = (sortBy) => {
+const getOrderByStatement = (sortBy: string) : string => {
    if (sortBy === SortOption.AscendingPrice) {
       return "ORDER BY price ASC";
    } else if (sortBy === SortOption.DescendingPrice) {
@@ -35,13 +36,14 @@ const getOrderByStatement = (sortBy) => {
 
 /**
  * Inserts a new user
- * @param {string} email The new user's email
- * @param {string} firstName The new user's first name
- * @param {string} lastName The new user's last name
- * @param {string} password The new user's password 
+ * @param email The new user's email
+ * @param firstName The new user's first name
+ * @param lastName The new user's last name
+ * @param password The new user's password 
+ * @returns Array of rows from the Users table
  */
-const addUser = (email, firstName, lastName, password) => {
-   return new Promise((resolve, reject) => {
+const addUser = (email: string, firstName: string, lastName: string, password: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`INSERT INTO Users (user_email, first_name, last_name, user_password) 
             VALUES($1, $2, $3, $4) RETURNING *`, [email, firstName, lastName, password], (error, results) => {
          if (error) {
@@ -57,10 +59,11 @@ const addUser = (email, firstName, lastName, password) => {
  * Updates the search history table with a given search query
  * If the query is in the table, increments the frequency column by 1
  * Otherwise, adds the query to the table with a frequency of 1
- * @param {string} query 
+ * @param query 
+ * @returns Array of rows from the SearchHistory table
  */
-const updateSearchHistory = (query) => {
-   return new Promise((resolve, reject) => {
+const updateSearchHistory = (query: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`INSERT INTO SearchHistory (query) VALUES($1)
             ON CONFLICT (query) DO UPDATE
             SET frequency = SearchHistory.frequency + 1
@@ -76,10 +79,11 @@ const updateSearchHistory = (query) => {
 
 /**
  * Returns true if a user with the given email exists and false otherwise
- * @param {string} email The email
+ * @param email The email
+ * @returns True if a user with the given email exists and false otherwise
  */
-const isExistingUser = (email) => {
-   return new Promise((resolve, reject) => {
+const isExistingUser = (email: string) => {
+   return new Promise<boolean>((resolve, reject) => {
       pool.query(`SELECT user_email FROM Users WHERE user_email=$1`, [email], (error, results) => {
          if (error) {
             reject(error);
@@ -92,10 +96,11 @@ const isExistingUser = (email) => {
 
 /**
  * Gets a user
- * @param {string} email The user's email
+ * @param email The user's email
+ * @returns Array of rows from the Users table
  */
-const getUser = (email) => {
-   return new Promise((resolve, reject) => {
+const getUser = (email: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM Users WHERE user_email=$1`, [email], (error, results) => {
          if (error) {
             reject(error);
@@ -108,10 +113,11 @@ const getUser = (email) => {
 
 /**
  * Gets all the store products
- * @param {string} sortOption An option from the SortOption enum to sort the products by
+ * @param sortOption An option from the SortOption enum to sort the products by
+ * @returns Array of rows from the Products table
  */
-const getAllProducts = (sortOption) => {
-   return new Promise((resolve, reject) => {
+const getAllProducts = (sortOption: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       const orderBy = getOrderByStatement(sortOption);
       pool.query(`SELECT * FROM Products
                   ${orderBy}`, (error, results) => {
@@ -129,11 +135,12 @@ const getAllProducts = (sortOption) => {
  * A product is considered a match if the keyword of the product's category is
  * contained in the search query or if the product's name contains all the
  * words in the search query
- * @param {string} searchQuery The search query
- * @param {string} sortOption An option from the SortOption enum to sort the products by
+ * @param searchQuery The search query
+ * @param sortOption An option from the SortOption enum to sort the products by
+ * @returns Array of rows from the Products table
  */
-const getProductsByQuery = (searchQuery, sortOption) => {
-   return new Promise((resolve, reject) => {
+const getProductsByQuery = (searchQuery: string, sortOption: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       const orderBy = getOrderByStatement(sortOption);
       searchQuery = searchQuery.toLowerCase();
       const categoryCondition = `category_id IN
@@ -156,12 +163,13 @@ const getProductsByQuery = (searchQuery, sortOption) => {
 
 /**
  * Gets the store products with a category
- * @param {number} categoryId The category id
- * @param {string} sortOption An option from the SortOption enum to sort the products by
+ * @param categoryId The category id
+ * @param sortOption An option from the SortOption enum to sort the products by
+ * @returns Array of rows from the Products table
  */
-const getProductsByCategory = (categoryId, sortOption) => {
+const getProductsByCategory = (categoryId: string, sortOption: string) => {
    const orderBy = getOrderByStatement(sortOption);
-   return new Promise((resolve, reject) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM Products WHERE category_id=$1
                   ${orderBy}`, [categoryId], (error, results) => {
          if (error) {
@@ -174,9 +182,10 @@ const getProductsByCategory = (categoryId, sortOption) => {
 
 /**
  * Gets all the categories in the store
+ * @returns Array of rows from the Categories table
  */
 const getAllCategories = () => {
-   return new Promise((resolve, reject) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM Categories`, (error, results) => {
          if (error) {
             reject(error);
@@ -189,9 +198,10 @@ const getAllCategories = () => {
 
 /**
  * Gets all the departments in the store
+ * @returns Array of rows from the Departments table
  */
 const getAllDepartments = () => {
-   return new Promise((resolve, reject) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM Departments`, (error, results) => {
          if (error) {
             reject(error);
@@ -204,10 +214,11 @@ const getAllDepartments = () => {
 
 /**
  * Gets all the product categories in a department
- * @param {number} departmentId The department id
+ * @param departmentId The department id
+ * @returns Array of rows from the Categories table
  */
-const getCategoriesInDepartment = (departmentId) => {
-   return new Promise((resolve, reject) => {
+const getCategoriesInDepartment = (departmentId: string) => {
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM Categories WHERE department_id=$1`, [departmentId], (error, results) => {
          if (error) {
             reject(error);
@@ -219,11 +230,12 @@ const getCategoriesInDepartment = (departmentId) => {
 
 /**
  * Gets an array of past search queries that contain the given search query
- * @param {string} query The query to match to past search queries
+ * @param query The query to match to past search queries
+ * @returns Array of rows from the SearchHistory table
  */
-const getSimilarPastSearches = (query) => {
-   lowerCaseQuery = query.toLowerCase();
-   return new Promise((resolve, reject) => {
+const getSimilarPastSearches = (query: string) => {
+   const lowerCaseQuery = query.toLowerCase();
+   return new Promise<any[]>((resolve, reject) => {
       pool.query(`SELECT * FROM SearchHistory WHERE query LIKE '%${lowerCaseQuery}%'`, (error, results) => {
          if (error) {
             reject(error);
@@ -233,7 +245,7 @@ const getSimilarPastSearches = (query) => {
    });
 }
 
-module.exports = {
+export default {
    addUser,
    isExistingUser,
    getUser,
