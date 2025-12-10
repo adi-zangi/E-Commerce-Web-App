@@ -2,10 +2,29 @@
  * Utility functions for processing data
  */
 
-import { getAllCategories, updateSearchHistory } from "./dataService";
-import { Category, Product, SearchHistory } from "./dataTypes";
-import levenshtein from "fast-levenshtein";
+import { getAllCategories } from "../data/dataService";
+import { Category, Page, Product, SearchHistory } from "./dataTypes";
+import { distance } from "fastest-levenshtein";
 import bcrypt from "bcryptjs";
+import { AxiosResponse } from "axios";
+
+/**
+ * Returns the value of a page from the Page enum that matches the given pathname
+ * @param pathname The pathname of a URL
+ * @returns The Page enum value based on the given pathname
+ */
+const getPageFromPath = (pathname: string): Page => {
+   if (pathname === "/") {
+      return Page.Home;
+   } else if (pathname === "/login") {
+      return Page.LogIn;
+   } else if (pathname === "/signup") {
+      return Page.SignUp;
+   } else if (pathname.includes("/results")) {
+      return Page.SearchResults;
+   }
+   return Page.NoPage;
+}
 
 /**
  * Returns a hash for the given password
@@ -53,7 +72,7 @@ const getIdToCategoryMap = async () : Promise<Map<number, string>> => {
    let categoryMap = new Map<number, string>();
 
    await getAllCategories()
-      .then((res: any) => {
+      .then((res: AxiosResponse<Category[]>) => {
          categories = res.data;
          for (const category of categories) {
             categoryMap.set(category.category_id, category.category_name);
@@ -66,17 +85,6 @@ const getIdToCategoryMap = async () : Promise<Map<number, string>> => {
       });
    
    return categoryMap;
-}
-
-/**
- * Updates the search history table with the given search query
- * @param query The search query
- */
-const recordSearch = async (query: string) => {
-   await updateSearchHistory(query)
-      .catch((e: Error) => {
-         console.error(e);
-      });
 }
 
 /**
@@ -101,8 +109,8 @@ const sortProductsByRelevance = (products: Product[], query: string,
    const sorted = products.sort((a: Product, b: Product) => {
       const firstCategory = idToCategoryMap.get(a.category_id) + "";
       const secondCategory = idToCategoryMap.get(b.category_id) + "";
-      const firstCategoryDistance = levenshtein.get(firstCategory, query);
-      const secondCategoryDistance = levenshtein.get(secondCategory, query);
+      const firstCategoryDistance = distance(firstCategory, query);
+      const secondCategoryDistance = distance(secondCategory, query);
       if (firstCategoryDistance !== secondCategoryDistance) {
          return firstCategoryDistance - secondCategoryDistance;
       }
@@ -165,5 +173,5 @@ const getDistanceToQuery = (str: string, query: string) : number => {
    return distanceToQuery;
 }
 
-export { getHashedPassword, comparePassword, getIdToCategoryMap,
-   sortProductsByRelevance, recordSearch, sortSearchSuggestionsByRelevance};
+export { getPageFromPath, getHashedPassword, comparePassword, getIdToCategoryMap,
+   sortProductsByRelevance, sortSearchSuggestionsByRelevance};

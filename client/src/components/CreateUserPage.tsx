@@ -5,9 +5,10 @@
 import { FC, useRef, useState } from "react";
 import { AppState, User } from "../utils/dataTypes";
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
-import { addUser, getUser } from "../utils/dataService";
+import { addUser, isExistingUser } from "../data/dataService";
 import { useNavigate } from "react-router-dom";
 import { getHashedPassword } from "../utils/dataUtils";
+import { AxiosResponse } from "axios";
 
 interface Props {
    state: AppState;
@@ -59,15 +60,15 @@ const CreateUserPage: FC<Props> = (props: Props) => {
          newState.emailValid = false;
          newState.emailHelptext = "Invalid email";
       } else {
-         let user : User | null = null;
-         await getUser(email)
-            .then((res: any) => {
-               user = res.data;
+         let userExists = false;
+         await isExistingUser(email)
+            .then((res: AxiosResponse<boolean>) => {
+               userExists = res.data;
             })
             .catch((e: Error) => {
                console.log(e);
             });
-         if (user) {
+         if (userExists) {
             newState.emailValid = false;
             newState.emailHelptext = "There is already an account with this email"
          }
@@ -139,7 +140,7 @@ const CreateUserPage: FC<Props> = (props: Props) => {
                user_password: hashedPassword
             };
             await addUser(user);
-            navigate(-1);
+            navigate("/login");
       } else {
          setState(newState);
       }

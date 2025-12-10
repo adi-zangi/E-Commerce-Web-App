@@ -5,10 +5,10 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 import { FC, useRef, useState } from "react";
 import { AppState, User } from "../utils/dataTypes";
-import { getUser, isExistingUser } from "../utils/dataService";
+import { getUser, isExistingUser } from "../data/dataService";
 import { Link, useNavigate } from "react-router-dom";
 import { comparePassword } from "../utils/dataUtils";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 interface Props {
    state: AppState;
@@ -89,7 +89,7 @@ const LogInPage: FC<Props> = (props: Props) => {
       let user;
       let tooManyAttempts;
       await getUser(email)
-         .then((res: any) => {
+         .then((res: AxiosResponse<User>) => {
             user = res.data;
          })
          .catch((e: AxiosError) => {

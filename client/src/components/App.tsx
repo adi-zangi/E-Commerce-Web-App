@@ -10,26 +10,10 @@ import { AppState, Page, User } from '../utils/dataTypes';
 import SearchResultsPage from './SearchResultsPage';
 import TopMenu from './TopMenu';
 import LogInPage from './LogInPage';
-import { getIdToCategoryMap } from '../utils/dataUtils';
+import { getIdToCategoryMap, getPageFromPath } from '../utils/dataUtils';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import NoPage from './NoPage';
 import CreateUserPage from './CreateUserPage';
-
-/**
- * Returns the value of a page from the Page enum that matches the given pathname
- * @param pathname The pathname of a URL
- * @returns The Page enum value based on the given pathname
- */
-const getPageFromPath = (pathname: string): Page => {
-   if (pathname === "/") {
-      return Page.Home;
-   } else if (pathname === "/login") {
-      return Page.LogIn;
-   } else if (pathname.includes("/results")) {
-      return Page.SearchResults;
-   }
-   return Page.NoPage;
-}
 
 const App: FC = () => {
    
@@ -51,13 +35,12 @@ const App: FC = () => {
          const categoryMap = await getIdToCategoryMap();
          setState({
             user: userObj,
-            page: getPageFromPath(location.pathname),
+            page: Page.Home,
             loading: false,
             idToCategoryMap: categoryMap,
          });
       }
       initState();
-      // eslint-disable-next-line
    }, []);
 
    // Updates the current page type whenever the URL changes

@@ -1,19 +1,17 @@
 /**
- * Functions to request data from the server
+ * Functions to make data requests to the server
  */
 
 import { AxiosResponse } from 'axios';
 import axios from './axiosConfig';
-import { User } from './dataTypes';
-
-type PromiseResponse = Promise<AxiosResponse<any, any>>;
+import { Category, Department, Product, SearchHistory, User } from '../utils/dataTypes';
 
 /**
  * Adds a new user to the database
  * @param user The new user's User object
  * @returns A promise on the new user's User object
  */
-const addUser = (user: User) : PromiseResponse => {
+const addUser = (user: User) : Promise<AxiosResponse<User>> => {
    return axios.post(`/users/create`, {
       email: user.user_email,
       first_name: user.first_name,
@@ -30,7 +28,7 @@ const addUser = (user: User) : PromiseResponse => {
  * @param query The search query to add, not URL encoded
  * @returns A promise on the SearchHistory object for the search query
  */
-const updateSearchHistory = (query: string) : PromiseResponse => {
+const updateSearchHistory = (query: string) : Promise<AxiosResponse<SearchHistory>> => {
    return axios.post(`/search_history/add/${encodeURIComponent(query)}`);
 }
 
@@ -39,7 +37,7 @@ const updateSearchHistory = (query: string) : PromiseResponse => {
  * @param email The email
  * @returns A promise on a boolean
  */
-const isExistingUser = (email: string) : PromiseResponse => {
+const isExistingUser = (email: string) : Promise<AxiosResponse<boolean>> => {
    return axios.get(`/user_exists/${email}`);
 }
 
@@ -48,7 +46,7 @@ const isExistingUser = (email: string) : PromiseResponse => {
  * @param email The user's email
  * @returns A promise on a User object
  */
-const getUser = (email: string) : PromiseResponse => {
+const getUser = (email: string) : Promise<AxiosResponse<User>> => {
    return axios.get(`/users/${email}`);
 }
 
@@ -57,7 +55,7 @@ const getUser = (email: string) : PromiseResponse => {
  * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const getAllProducts = (sortOption: string) : PromiseResponse => {
+const getAllProducts = (sortOption: string) : Promise<AxiosResponse<Product[]>> => {
    return axios.get(`/products/sort_by/${sortOption}`);
 }
 
@@ -68,7 +66,8 @@ const getAllProducts = (sortOption: string) : PromiseResponse => {
  * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const searchForProducts = (query: string, sortOption: string): PromiseResponse => {
+const searchForProducts = (query: string, sortOption: string):
+      Promise<AxiosResponse<Product[]>> => {
    if (query.length === 0) {
       return getAllProducts(sortOption);
    }
@@ -82,7 +81,8 @@ const searchForProducts = (query: string, sortOption: string): PromiseResponse =
  * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const getProductsByCategory = (categoryId: number, sortOption: string): PromiseResponse => {
+const getProductsByCategory = (categoryId: number, sortOption: string):
+      Promise<AxiosResponse<Product[]>> => {
    return axios.get(`/products/category/${categoryId}/sort_by/${sortOption}`);
 }
 
@@ -90,7 +90,7 @@ const getProductsByCategory = (categoryId: number, sortOption: string): PromiseR
  * Gets all the product categories in the store from the database
  * @returns A promise on an array of Category
  */
-const getAllCategories = (): PromiseResponse => {
+const getAllCategories = (): Promise<AxiosResponse<Category[]>> => {
    return axios.get(`/categories`);
 }
 
@@ -98,7 +98,7 @@ const getAllCategories = (): PromiseResponse => {
  * Gets all the departments in the store from the database
  * @returns A promise on an array of Department
  */
-const getAllDepartments = () : PromiseResponse => {
+const getAllDepartments = () : Promise<AxiosResponse<Department[]>> => {
    return axios.get(`/departments`);
 }
 
@@ -107,7 +107,8 @@ const getAllDepartments = () : PromiseResponse => {
  * @param departmentId The department id
  * @returns A promise on an array of Category
  */
-const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
+const getCategoriesInDepartment = (departmentId: number) :
+      Promise<AxiosResponse<Category[]>> => {
    return axios.get(`/department/${departmentId}/categories`)
 }
 
@@ -117,7 +118,8 @@ const getCategoriesInDepartment = (departmentId: number) : PromiseResponse => {
  * @param text The query to match to past search queries, not URL encoded
  * @returns A promise on an array of SearchHistory
  */
-const getSimilarPastSearches = (query: string) : PromiseResponse => {
+const getSimilarPastSearches = (query: string) :
+      Promise<AxiosResponse<SearchHistory[]>> => {
    return axios.get(`/search_history/search/${encodeURIComponent(query)}`);
 }
 

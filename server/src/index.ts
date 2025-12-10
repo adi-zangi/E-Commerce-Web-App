@@ -1,5 +1,5 @@
 /**
- * A web service that listens for database requests
+ * API endpoints that process requests from the client
  */
 
 import express from 'express';

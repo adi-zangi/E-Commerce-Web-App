@@ -4,7 +4,7 @@
 
 import { Button } from "@blueprintjs/core";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { getSimilarPastSearches } from "../utils/dataService";
+import { getSimilarPastSearches } from "../data/dataService";
 import { AxiosResponse } from "axios";
 import { SearchHistory } from "../utils/dataTypes";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ const SearchAutocomplete: FC<Props> = (props: Props) => {
    useEffect(() => {
       const getAutocompleteList = async () => {
          await getSimilarPastSearches(props.searchState.query)
-         .then((res: AxiosResponse<Array<SearchHistory>>) => {
+         .then((res: AxiosResponse<SearchHistory[]>) => {
             const suggestions = sortSearchSuggestionsByRelevance(res.data,
                props.searchState.query);
             let topSuggestions = suggestions.slice(0, 6);

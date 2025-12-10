@@ -80,12 +80,7 @@ const SearchBox: FC<Props> = (props: Props) => {
          }
          if (searchBox.current && (searchBox.current.value !== query)) {
             searchBox.current.value = query;
-            const showAutocomplete = query === "" ? false : state.showAutocomplete;
-            setState({
-               ...state,
-               query: query,
-               showAutocomplete: showAutocomplete,
-            });
+            setState(prevState => ({ ...prevState, query: query }));
          }
       }
    }, [searchParams]);

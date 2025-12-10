@@ -3,13 +3,13 @@
  * results
  */
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { AppState, Product, SortOption } from "../utils/dataTypes";
 import SearchResultsGrid from "./SearchResultsGrid";
 import { Button, NumericInput, Spinner } from "@blueprintjs/core";
-import { getProductsByCategory, searchForProducts } from "../utils/dataService";
+import { getProductsByCategory, searchForProducts, updateSearchHistory } from "../data/dataService";
 import { AxiosResponse } from "axios";
-import { recordSearch, sortProductsByRelevance } from "../utils/dataUtils";
+import { sortProductsByRelevance } from "../utils/dataUtils";
 import { useLocation, useSearchParams } from "react-router-dom";
 import SearchResultsOptionsMenu from "./SearchResultsOptionsMenu";
 
@@ -46,7 +46,7 @@ interface Params {
  * selected shop category
  * @param params Search parameters from the current url
  */
-const getSearchResults = (params: Params) : Promise<AxiosResponse<any, any>> => {
+const getSearchResults = (params: Params) : Promise<AxiosResponse<Product[]>> => {
    const sortOption = params.sortBy ? params.sortBy : SortOption.Relevance;
    if (params.query) {
       return searchForProducts(params.query, sortOption);
@@ -79,7 +79,10 @@ const sortResults = (results: Product[], params: Params, idToCategoryMap: Map<nu
 const addSearchToHistory = async (params: Params) => {
    let query = params.query;
    if (query) {
-      await recordSearch(query);
+      await updateSearchHistory(query)
+         .catch((e: Error) => {
+            console.error(e);
+         });
    }
 }
 
@@ -204,10 +207,9 @@ const SearchResultsPage: FC<Props> = (props: Props) => {
             return;
          }
          let results = new Array<Product>();
-         let sortOption = "";
          const params = parseSearchParams(searchParams, props.state.idToCategoryMap);
          await getSearchResults(params)
-            .then((res: any) => {
+            .then((res: AxiosResponse<Product[]>) => {
                results = res.data;
             })
             .catch((e: Error) => {

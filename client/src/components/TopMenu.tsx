@@ -6,8 +6,9 @@ import { FC, useEffect, useState } from 'react';
 import '../styles/App.css';
 import { AppState, Category, Department } from '../utils/dataTypes';
 import { Button, Menu, MenuItem, Popover } from '@blueprintjs/core';
-import { getAllDepartments, getCategoriesInDepartment } from '../utils/dataService';
+import { getAllDepartments, getCategoriesInDepartment } from '../data/dataService';
 import { useNavigate } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 interface Props {
    state: AppState;
@@ -62,12 +63,12 @@ const TopMenu: FC<Props> = (props: Props) => {
    useEffect(() => {
       const getData = async () => {
          await getAllDepartments()
-         .then((res: any) => {
-            setState(prevState => ({ ...prevState, departments: res.data }));
-         })
-         .catch((e: Error) => {
-            console.log(e);
-         });
+            .then((res: AxiosResponse<Department[]>) => {
+               setState(prevState => ({ ...prevState, departments: res.data }));
+            })
+            .catch((e: Error) => {
+               console.log(e);
+            });
       }
       getData();
    }, []);
@@ -78,7 +79,7 @@ const TopMenu: FC<Props> = (props: Props) => {
          const categories = new Array<Array<Category>>();
          for (const department of state.departments) {
             await getCategoriesInDepartment(department.department_id)
-               .then((res: any) => {
+               .then((res: AxiosResponse<Category[]>) => {
                   categories.push(res.data);
                })
                .catch((e: Error) => {

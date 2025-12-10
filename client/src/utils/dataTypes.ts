@@ -5,6 +5,7 @@
 export enum Page {
    Home,
    LogIn,
+   SignUp,
    SearchResults,
    NoPage,
 }
