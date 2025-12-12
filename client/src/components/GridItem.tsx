@@ -17,7 +17,7 @@ export const imageStyle = {
 
 export const gridItemStyle = {
    width: 370,
-   height: 225,
+   height: 245,
    borderThickness: 1,
 }
 
@@ -27,8 +27,8 @@ const GridItem: FC<Props> = (props: Props) => {
          <a className="Item-link" href={window.location.href}>
             <img src={props.image} style={imageStyle} alt="" />
             <div className="Item-desc">
-               <div className="Item-name">{props.name}</div>
                <div className="Item-price">{"$" + props.price}</div>
+               <div className="Item-name">{props.name}</div>
             </div>
          </a>
       </div>

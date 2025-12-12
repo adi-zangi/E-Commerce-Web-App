@@ -3,10 +3,10 @@
  * results
  */
 
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { AppState, Product, SortOption } from "../utils/dataTypes";
 import SearchResultsGrid from "./SearchResultsGrid";
-import { Button, NumericInput, Spinner } from "@blueprintjs/core";
+import { Button, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts, updateSearchHistory } from "../data/dataService";
 import { AxiosResponse } from "axios";
 import { sortProductsByRelevance } from "../utils/dataUtils";
@@ -113,11 +113,11 @@ const getResultsForPage = (results: Array<Product>, pageNumber: number, itemsPer
 
 const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
 
-   const pageInputField = useRef<HTMLInputElement>(null);
+   const pageNumber = useRef<HTMLParagraphElement>(null);
 
    const setPageField = (page: number) => {
-      if (pageInputField.current) {
-         pageInputField.current.value = page.toString();
+      if (pageNumber.current) {
+         pageNumber.current.textContent = `Page ${page} of ${props.numberOfPages}`;
       }
    }
 
@@ -127,37 +127,16 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
    }
 
    const handlePageUpClick = () => {
-      if (pageInputField.current?.value !== props.selectedPage.toString()) {
-         handlePageInputChange();
-      } else if (props.selectedPage < props.numberOfPages) {
+      if (props.selectedPage < props.numberOfPages) {
          setPage(props.selectedPage + 1);
       }
    }
 
    const handlePageDownClick = () => {
-      if (pageInputField.current?.value !== props.selectedPage.toString()) {
-         handlePageInputChange();
-      } else if (props.selectedPage > 1) {
+      if (props.selectedPage > 1) {
          setPage(props.selectedPage - 1);
       }
    }
-
-   const handleKeyDown = (event : React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-         handlePageInputChange();
-      }
-   }
-
-   const handlePageInputChange = () => {
-      if (pageInputField.current) {
-         const pageInput = Number(pageInputField.current.value);
-         if ((pageInput >= 1) && (pageInput <= props.numberOfPages)) {
-            setPage(pageInput);
-         }
-      }
-   }
-
-   setPageField(props.selectedPage);
 
    return (
       <div className="Page-picker">
@@ -166,16 +145,9 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
             icon="chevron-left"
             onClick={handlePageDownClick}
          />
-         {"Page"}
-         <NumericInput
-            inputRef={pageInputField}
-            inputClassName="Page-input"
-            buttonPosition="none"
-            selectAllOnFocus
-            defaultValue={props.selectedPage}
-            onKeyDown={handleKeyDown}
-         />
-         {"of " + props.numberOfPages}
+         <p className="Page-text">
+            Page {props.selectedPage} / {props.numberOfPages}
+         </p>
          <Button
             className="Page-up-btn bp5-minimal"
             icon="chevron-right"

@@ -46,13 +46,14 @@ const SearchAutocomplete: FC<Props> = (props: Props) => {
    }, [props.searchState.query]);
 
    const handleItemClick = (itemText: string) => {
-      navigate("/results/search/?q=" + encodeURIComponent(itemText));
+      navigate("/results/search?q=" + encodeURIComponent(itemText));
       props.setSearchState({ ...props.searchState, showAutocomplete: false });
    }
 
    const autocompleteList = () => {
       const items = state.suggestionsList.map(item => 
          <Button
+            key={item}
             className="bp5-minimal"
             alignText="start"
             text={item}

@@ -41,11 +41,12 @@ const DepartmentDropDownMenu: FC<DepartmentProps> = (props: DepartmentProps) => 
       </Menu>;
 
    return (
-      <Popover minimal content={dropdownMenu} placement="bottom">
+      <Popover minimal content={dropdownMenu} placement="bottom" interactionKind="hover">
             <Button
-               className="bp5-minimal bp5-small"
+               className="Top-menu-btn"
+               variant="minimal"
+               size="small"
                alignText="left"
-               rightIcon="caret-down"
                text={props.department.department_name} />
       </Popover>
    );
@@ -94,7 +95,7 @@ const TopMenu: FC<Props> = (props: Props) => {
    }, [state.departments]);
 
    const handleMenuItemClick = async (category: Category) => {
-      navigate("/results/category/?c=" + encodeURIComponent(category.category_name));
+      navigate("/results/category?c=" + encodeURIComponent(category.category_name));
    }
 
    const menuItems = state.departments.map((department, index) => 

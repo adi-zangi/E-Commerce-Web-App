@@ -34,7 +34,7 @@ const SearchBox: FC<Props> = (props: Props) => {
 
    const handleSearchClick = () => {
       if (state.query.length > 0) {
-         navigate("/results/search/?q=" + encodeURIComponent(state.query));
+         navigate("/results/search?q=" + encodeURIComponent(state.query));
       } else {
          navigate("/results/all");
       }

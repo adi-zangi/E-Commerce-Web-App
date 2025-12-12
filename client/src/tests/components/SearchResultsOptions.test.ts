@@ -1,5 +1,5 @@
 /**
- * Tests the SearchResultsOptionsMenu component
+ * Tests the SearchResultsOptions component
  */
 
 import { Builder, Browser, By, WebDriver } from 'selenium-webdriver';
@@ -21,7 +21,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it('verifies that the sort select menu is present in the search results page and has 3 options', async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils`);
+      await driver.get(`${appUrl}/results/category?c=Pencils`);
 
       let sortSelect = await driver.findElement(By.id('sortBtn'));
       await sortSelect.click();
@@ -31,7 +31,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it("verifies that the selected sort option is 'relevance' when a new search is made", async () => {
-      await driver.get(`${appUrl}/results/search/?q=pencils`);
+      await driver.get(`${appUrl}/results/search?q=pencils`);
       
       // Verifies that 'relevance' is selected
       let sortSelect = await driver.findElement(By.id('sortBtn'));
@@ -40,7 +40,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it('verifies that selecting a sort option makes the url change', async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils`);
+      await driver.get(`${appUrl}/results/category?c=Pencils`);
       
       // Selects the second sort option and verifies that the url contains the sort option
       const sortSelect = await driver.findElement(By.id('sortBtn'));
@@ -50,7 +50,7 @@ describe('Search Results Options Tests', () => {
       let secondOption = menuOptions[1];
       await secondOption.click();
       const url = await driver.getCurrentUrl();
-      expect(url).toBe(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
+      expect(url).toBe(`${appUrl}/results/category?c=Pencils&sort=Price%2C+low+to+high`);
    });
 
    it('verifies that that selected option in the sort menu matches the url', async () => {
@@ -63,7 +63,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it("verifies that the selected sort option resets to 'relevance' after a search is made", async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
+      await driver.get(`${appUrl}/results/category?c=Pencils&sort=Price%2C+low+to+high`);
 
       // Makes a search
       const searchInput = await driver.findElement(By.id('searchInput'));
@@ -71,7 +71,7 @@ describe('Search Results Options Tests', () => {
       await searchInput.sendKeys('books');
       await searchButton.click();
       const url = await driver.getCurrentUrl();
-      expect(url).toBe(`${appUrl}/results/search/?q=books`);
+      expect(url).toBe(`${appUrl}/results/search?q=books`);
 
       // Verifies that 'relevance' is selected
       const sortSelect = await driver.findElement(By.id('sortBtn'));
@@ -80,7 +80,7 @@ describe('Search Results Options Tests', () => {
    });
 
    it('verifies that the selected sort option stays the same after the page refreshes', async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pencils&sort=Price%2C+low+to+high`);
+      await driver.get(`${appUrl}/results/category?c=Pencils&sort=Price%2C+low+to+high`);
 
       // Refreshes the page
       await driver.navigate().refresh();

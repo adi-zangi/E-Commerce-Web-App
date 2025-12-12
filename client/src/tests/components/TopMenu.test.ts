@@ -41,6 +41,6 @@ describe('Top Menu Tests', () => {
       let categoryName = await firstCategory.getText();
       await firstCategory.click();
       let url = await driver.getCurrentUrl();
-      expect(url).toBe(`${appUrl}/results/category/?c=${categoryName}`);
+      expect(url).toBe(`${appUrl}/results/category?c=${categoryName}`);
    });
 });

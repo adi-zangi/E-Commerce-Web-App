@@ -31,7 +31,7 @@ describe('Search Box Tests', () => {
       await searchButton.click();
       let url = await driver.getCurrentUrl();
       let expectedParams = encodeURIComponent('blue pens');
-      expect(url).toBe(`${appUrl}/results/search/?q=${expectedParams}`);
+      expect(url).toBe(`${appUrl}/results/search?q=${expectedParams}`);
    });
 
    it('verifies that pressing the enter key in the search box makes a search', async () => {
@@ -44,6 +44,6 @@ describe('Search Box Tests', () => {
       await searchInput.sendKeys(Key.ENTER);
       let url = await driver.getCurrentUrl();
       let expectedParams = encodeURIComponent('blue pens');
-      expect(url).toBe(`${appUrl}/results/search/?q=${expectedParams}`);
+      expect(url).toBe(`${appUrl}/results/search?q=${expectedParams}`);
    });
 });
