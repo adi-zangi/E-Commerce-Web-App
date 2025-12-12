@@ -45,7 +45,7 @@ const DepartmentDropDownMenu: FC<DepartmentProps> = (props: DepartmentProps) => 
             <Button
                className="bp5-minimal bp5-small"
                alignText="left"
-               rightIcon="caret-down"
+               endIcon="caret-down"
                text={props.department.department_name} />
       </Popover>
    );
@@ -94,7 +94,7 @@ const TopMenu: FC<Props> = (props: Props) => {
    }, [state.departments]);
 
    const handleMenuItemClick = async (category: Category) => {
-      navigate("/results/category/?c=" + encodeURIComponent(category.category_name));
+      navigate("/results/category?c=" + encodeURIComponent(category.category_name));
    }
 
    const menuItems = state.departments.map((department, index) => 

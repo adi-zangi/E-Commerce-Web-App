@@ -68,7 +68,7 @@ describe('Search Autocomplete Tests', () => {
 
       let url = await driver.getCurrentUrl();
       let expectedParams = encodeURIComponent(suggestionText);
-      expect(url).toBe(`${appUrl}/results/search/?q=${expectedParams}`);
+      expect(url).toBe(`${appUrl}/results/search?q=${expectedParams}`);
    });
 
    it('verifies that making a search makes the search suggestions disappear', async () => {
@@ -107,7 +107,7 @@ describe('Search Autocomplete Tests', () => {
    });
 
    it('verifies that clicking outside of the search section makes the search suggestions disappear', async () => {
-      await driver.get(`${appUrl}/results/category/?c=Pen`);
+      await driver.get(`${appUrl}/results/category?c=Pens`);
 
       let searchInput = await driver.findElement(By.id('searchInput'));
       let autocompleteMenuArray;
