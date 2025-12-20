@@ -17,9 +17,12 @@ A web application for an online store called AZ Shop.
 * [View products by department and category](#view-products-by-department-and-category)
 
 ### Create a user and log in
-The login process is secure by requiring users to have strong passwords, storing encrypted passwords, and limiting login attempts.
 
 ![](/assets/log_in_example.gif)
+
+The login process is secure by requiring users to have strong passwords, storing encrypted passwords, and limiting login attempts.
+
+![](/assets/log_in_security_example.gif)
 
 <br />
 
