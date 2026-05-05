@@ -3,13 +3,13 @@
  * results
  */
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { AppState, Product, SortOption } from "../utils/dataTypes";
 import SearchResultsGrid from "./SearchResultsGrid";
 import { Button, Spinner } from "@blueprintjs/core";
 import { getProductsByCategory, searchForProducts, updateSearchHistory } from "../data/dataService";
 import { AxiosResponse } from "axios";
-import { sortProductsByRelevance } from "../utils/dataUtils";
+import { getProductsByCustomCategory, sortProductsByRelevance } from "../utils/dataUtils";
 import { useLocation, useSearchParams } from "react-router-dom";
 import SearchResultsOptionsMenu from "./SearchResultsOptionsMenu";
 
@@ -31,13 +31,15 @@ interface State {
    itemsPerPage: number;
    numberOfPages: number;
    query: string | null;
-   categoryId: number | null;
+   categoryId: string | null;
+   categoryName: string | null;
    sortBy: string;
 }
 
 interface Params {
    query: string | null;
-   categoryId: number | null;
+   categoryId: string | null;
+   categoryName: string | null;
    sortBy: string;
 }
 
@@ -52,6 +54,8 @@ const getSearchResults = (params: Params) : Promise<AxiosResponse<Product[]>> =>
       return searchForProducts(params.query, sortOption);
    } else if (params.categoryId) {
       return getProductsByCategory(params.categoryId, sortOption);
+   } else if (params.categoryName) {
+      return getProductsByCustomCategory(params.categoryName, sortOption);
    } else {
       return searchForProducts("", sortOption);
    }
@@ -113,17 +117,8 @@ const getResultsForPage = (results: Array<Product>, pageNumber: number, itemsPer
 
 const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
 
-   const pageNumber = useRef<HTMLParagraphElement>(null);
-
-   const setPageField = (page: number) => {
-      if (pageNumber.current) {
-         pageNumber.current.textContent = `Page ${page} of ${props.numberOfPages}`;
-      }
-   }
-
    const setPage = (page: number) => {
       props.setPage(page);
-      setPageField(page);
    }
 
    const handlePageUpClick = () => {
@@ -146,7 +141,7 @@ const PagePicker: FC<PagePickerProps> = (props: PagePickerProps) => {
             onClick={handlePageDownClick}
          />
          <p className="Page-text">
-            Page {props.selectedPage} / {props.numberOfPages}
+            Page {props.selectedPage} of {props.numberOfPages}
          </p>
          <Button
             className="Page-up-btn bp5-minimal"
@@ -167,6 +162,7 @@ const SearchResultsPage: FC<Props> = (props: Props) => {
       numberOfPages: 0,
       query: null,
       categoryId: null,
+      categoryName: null,
       sortBy: "",
    });
 
@@ -201,6 +197,7 @@ const SearchResultsPage: FC<Props> = (props: Props) => {
             numberOfPages: getNumberOfPages(results.length, itemsPerPage),
             query: params.query,
             categoryId: params.categoryId,
+            categoryName: params.categoryName,
             sortBy: params.sortBy,
          });
       }
@@ -234,7 +231,7 @@ const SearchResultsPage: FC<Props> = (props: Props) => {
          sortBy = SortOption.Relevance;
       }
       
-      return {query: query, categoryId: categoryId, sortBy: sortBy};
+      return {query: query, categoryId: categoryId, categoryName: category, sortBy: sortBy};
    }
 
    const setPage = (page: number) => {

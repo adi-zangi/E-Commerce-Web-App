@@ -163,15 +163,16 @@ const getProductsByQuery = (searchQuery: string, sortOption: string) => {
 
 /**
  * Gets the store products with a category
- * @param categoryId The category id
+ * @param categoryIds A comma-separated string of category ids
  * @param sortOption An option from the SortOption enum to sort the products by
  * @returns Array of rows from the Products table
  */
-const getProductsByCategory = (categoryId: string, sortOption: string) => {
+const getProductsByCategory = (categoryIds: string, sortOption: string) => {
+   const categoryIdArray = '{' + categoryIds + '}';
    const orderBy = getOrderByStatement(sortOption);
    return new Promise<any[]>((resolve, reject) => {
-      pool.query(`SELECT * FROM Products WHERE category_id=$1
-                  ${orderBy}`, [categoryId], (error, results) => {
+      pool.query(`SELECT * FROM Products WHERE category_id=ANY($1)
+                  ${orderBy}`, [categoryIdArray], (error, results) => {
          if (error) {
             reject(error);
          }

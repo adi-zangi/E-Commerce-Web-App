@@ -96,8 +96,8 @@ app.get('/products/search/:search_query/sort_by/:sort_option', (req, res) => {
 });
 
 // Get products by a category
-app.get('/products/category/:category_id/sort_by/:sort_option', (req, res) => {
-   db.getProductsByCategory(req.params.category_id, req.params.sort_option)
+app.get('/products/category/:category_ids/sort_by/:sort_option', (req, res) => {
+   db.getProductsByCategory(req.params.category_ids, req.params.sort_option)
    .then((val: any[]) => {
       res.status(200).send(val);
    })

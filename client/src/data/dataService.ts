@@ -77,13 +77,13 @@ const searchForProducts = (query: string, sortOption: string):
 
 /**
  * Gets the store products with a given category from the database
- * @param categoryId The category id
+ * @param categoryIds A comma-separated string of category ids
  * @param sortOption An option from the SortOption enum to sort the products by
  * @returns A promise on an array of Product
  */
-const getProductsByCategory = (categoryId: number, sortOption: string):
+const getProductsByCategory = (categoryIds: string, sortOption: string):
       Promise<AxiosResponse<Product[]>> => {
-   return axios.get(`/products/category/${categoryId}/sort_by/${sortOption}`);
+   return axios.get(`/products/category/${categoryIds}/sort_by/${sortOption}`);
 }
 
 /**

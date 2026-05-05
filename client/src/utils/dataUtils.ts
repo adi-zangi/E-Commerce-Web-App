@@ -2,7 +2,7 @@
  * Utility functions for processing data
  */
 
-import { getAllCategories } from "../data/dataService";
+import { getAllCategories, getProductsByCategory, searchForProducts } from "../data/dataService";
 import { Category, Page, Product, SearchHistory } from "./dataTypes";
 import { distance } from "fastest-levenshtein";
 import bcrypt from "bcryptjs";
@@ -85,6 +85,23 @@ const getIdToCategoryMap = async () : Promise<Map<number, string>> => {
       });
    
    return categoryMap;
+}
+
+/**
+ * Gets the store products with a given category from the home page
+ * @param categoryId The category name
+ * @param sortOption An option from the SortOption enum to sort the products by
+ * @returns A promise on an array of Product
+ */
+const getProductsByCustomCategory = (categoryName: string, sortOption: string) : Promise<AxiosResponse<Product[]>> => {
+   if (categoryName === "Writing") {
+      return getProductsByCategory("1, 2, 3, 4, 5", sortOption);
+   } else if (categoryName === "Organization") {
+      return getProductsByCategory("7, 8", sortOption);
+   } else if (categoryName === "Art supplies") {
+      return getProductsByCategory("3", sortOption);
+   }
+   return searchForProducts("", sortOption);
 }
 
 /**
@@ -174,4 +191,4 @@ const getDistanceToQuery = (str: string, query: string) : number => {
 }
 
 export { getPageFromPath, getHashedPassword, comparePassword, getIdToCategoryMap,
-   sortProductsByRelevance, sortSearchSuggestionsByRelevance};
+   getProductsByCustomCategory, sortProductsByRelevance, sortSearchSuggestionsByRelevance};
