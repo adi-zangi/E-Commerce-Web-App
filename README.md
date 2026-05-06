@@ -100,5 +100,6 @@ In another terminal in the root folder, start the client:
 ```
 cd client
 yarn install
+yarn build
 yarn start
 ```
